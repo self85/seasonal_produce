@@ -674,10 +674,10 @@ class ProduceListPageState extends State<ProduceListPage> {
     return months.first;
   }
 
-  double _distanceFromPeak(int currentMonth, int peakMonth) {
-    int distance = (currentMonth - peakMonth).abs();
+  double _distanceFromPeak(int currentMonth, double peakMonth) {
+    double distance = (currentMonth - peakMonth).abs();
     // Convert distance to score (closer to peak = higher score)
-    return 1.0 - (distance / 6.0);
+    return 1.0 - (distance / 6.0).clamp(0.0, 1.0);
   }
 
   void toggleFavorite(String itemName) {
