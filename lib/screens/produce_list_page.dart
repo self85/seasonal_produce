@@ -1,3 +1,5 @@
+import 'dart:math' as math;
+
 import 'package:flutter/material.dart';
 import 'package:seasonal_produce/models/produce_item.dart';
 import 'package:seasonal_produce/generated/l10n.dart';
@@ -30,7 +32,7 @@ class ProduceListPage extends StatefulWidget {
   ProduceListPageState createState() => ProduceListPageState();
 }
 
-class ProduceListPageState extends State<ProduceListPage> {
+class ProduceListPageState extends State<ProduceListPage> with SingleTickerProviderStateMixin {
   String? _selectedLocation = "sweden";
   String? _selectedLanguage = "english";
   late List<ProduceItem> items;
@@ -39,10 +41,15 @@ class ProduceListPageState extends State<ProduceListPage> {
   bool _isViewMenuExpanded = false;
   SortType _currentSort = SortType.alphabetical;
   Set<String> _favorites = {};
+  AnimationController? _animationController;
 
   @override
   void initState() {
     super.initState();
+    _animationController = AnimationController(
+      duration: const Duration(milliseconds: 200),
+      vsync: this,
+    );
     _loadSavedPreferences();
   }
 
@@ -60,6 +67,12 @@ class ProduceListPageState extends State<ProduceListPage> {
     await prefs.setString(kSelectedLocationKey, _selectedLocation ?? "sweden");
     await prefs.setString(kSelectedLanguageKey, _selectedLanguage ?? "english");
     await prefs.setStringList(kFavoritesKey, _favorites.toList());
+  }
+
+  @override
+  void dispose() {
+    _animationController?.dispose();
+    super.dispose();
   }
 
   @override
@@ -274,17 +287,35 @@ class ProduceListPageState extends State<ProduceListPage> {
         onPressed: () {
           setState(() {
             _isExpanded = !_isExpanded;
-            if (!_isExpanded) {
+            if (_isExpanded) {
+              _animationController?.forward();
+            } else {
+              _animationController?.reverse();
               _isSortMenuExpanded = false;
               _isViewMenuExpanded = false;
             }
           });
         },
         backgroundColor: const Color(0xFF3B0D3A),
-        child: Icon(
-          _isExpanded ? Icons.close : Icons.add,
-          color: Colors.white,
-        ),
+        child: _animationController != null 
+            ? AnimatedBuilder(
+                animation: _animationController!,
+                builder: (context, child) {
+                  return Transform.rotate(
+                    angle: _animationController!.value * (math.pi / 2), // 45 degrees in radians
+                    child: Icon(
+                      _isExpanded ? Icons.close : Icons.add,
+                      color: Colors.white,
+                      size: _isExpanded ? 34.0 : 38.0,
+                    ),
+                  );
+                },
+              )
+            : Icon(
+                _isExpanded ? Icons.close : Icons.add,
+                color: Colors.white,
+                size: _isExpanded ? 34.0 : 38.0,
+              ),
       ),
     );
   }
