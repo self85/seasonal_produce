@@ -6,11 +6,19 @@ import 'settings_screen.dart';
 
 const String kSelectedLocationKey = 'selected_location';
 const String kSelectedLanguageKey = 'selected_language';
+const String kFavoritesKey = 'favorites';
 
 enum ViewType {
   list,
   icon,
   card,
+}
+
+enum SortType {
+  none,
+  alphabetical,
+  seasonal,
+  favorite,
 }
 
 class ProduceListPage extends StatefulWidget {
@@ -28,6 +36,8 @@ class ProduceListPageState extends State<ProduceListPage> {
   late List<ProduceItem> items;
   bool _isExpanded = false;
   bool _isSortMenuExpanded = false;
+  SortType _currentSort = SortType.none;
+  Set<String> _favorites = {};
 
   @override
   void initState() {
@@ -40,6 +50,7 @@ class ProduceListPageState extends State<ProduceListPage> {
     setState(() {
       _selectedLocation = prefs.getString(kSelectedLocationKey) ?? "sweden";
       _selectedLanguage = prefs.getString(kSelectedLanguageKey) ?? "english";
+      _favorites = prefs.getStringList(kFavoritesKey)?.toSet() ?? {};
     });
   }
 
@@ -47,6 +58,7 @@ class ProduceListPageState extends State<ProduceListPage> {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString(kSelectedLocationKey, _selectedLocation ?? "sweden");
     await prefs.setString(kSelectedLanguageKey, _selectedLanguage ?? "english");
+    await prefs.setStringList(kFavoritesKey, _favorites.toList());
   }
 
   @override
@@ -213,6 +225,8 @@ class ProduceListPageState extends State<ProduceListPage> {
     var itemsInSeason = _selectedLocation != null
         ? items.where((item) => item.isInSeason(_selectedLocation!, currentMonth)).toList()
         : items;
+    
+    itemsInSeason = _sortItems(itemsInSeason);
 
     return Scaffold(
       appBar: AppBar(
@@ -341,6 +355,13 @@ class ProduceListPageState extends State<ProduceListPage> {
               color: Color(0xFF240041),
             ),
           ),
+          trailing: IconButton(
+            icon: Icon(
+              isFavorite(items[index].name) ? Icons.favorite : Icons.favorite_border,
+              color: isFavorite(items[index].name) ? Colors.red : Colors.grey,
+            ),
+            onPressed: () => toggleFavorite(items[index].name),
+          ),
         );
       },
     );
@@ -372,14 +393,37 @@ class ProduceListPageState extends State<ProduceListPage> {
             children: [
               Expanded(
                 flex: 4,
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(12.0),
-                  child: Image.asset(
-                    items[index].imagePath,
-                    fit: BoxFit.cover,
-                    width: imageSize,
-                    height: imageSize,
-                  ),
+                child: Stack(
+                  children: [
+                    ClipRRect(
+                      borderRadius: BorderRadius.circular(12.0),
+                      child: Image.asset(
+                        items[index].imagePath,
+                        fit: BoxFit.cover,
+                        width: imageSize,
+                        height: imageSize,
+                      ),
+                    ),
+                    Positioned(
+                      top: 4,
+                      right: 4,
+                      child: GestureDetector(
+                        onTap: () => toggleFavorite(items[index].name),
+                        child: Container(
+                          padding: const EdgeInsets.all(4),
+                          decoration: BoxDecoration(
+                            color: Colors.white.withOpacity(0.8),
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          child: Icon(
+                            isFavorite(items[index].name) ? Icons.favorite : Icons.favorite_border,
+                            color: isFavorite(items[index].name) ? Colors.red : Colors.grey,
+                            size: 16,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
               ),
               Expanded(
@@ -418,17 +462,40 @@ class ProduceListPageState extends State<ProduceListPage> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: <Widget>[
-                ClipRRect(
-                  borderRadius: const BorderRadius.vertical(
-                    top: Radius.circular(15),
-                    bottom: Radius.circular(15),
-                  ),
-                  child: Image.asset(
-                    items[index].imagePath,
-                    fit: BoxFit.cover,
-                    width: MediaQuery.of(context).size.width - 20.0,
-                    height: 250,
-                  ),
+                Stack(
+                  children: [
+                    ClipRRect(
+                      borderRadius: const BorderRadius.vertical(
+                        top: Radius.circular(15),
+                        bottom: Radius.circular(15),
+                      ),
+                      child: Image.asset(
+                        items[index].imagePath,
+                        fit: BoxFit.cover,
+                        width: MediaQuery.of(context).size.width - 20.0,
+                        height: 250,
+                      ),
+                    ),
+                    Positioned(
+                      top: 8,
+                      right: 8,
+                      child: GestureDetector(
+                        onTap: () => toggleFavorite(items[index].name),
+                        child: Container(
+                          padding: const EdgeInsets.all(8),
+                          decoration: BoxDecoration(
+                            color: Colors.white.withOpacity(0.9),
+                            borderRadius: BorderRadius.circular(20),
+                          ),
+                          child: Icon(
+                            isFavorite(items[index].name) ? Icons.favorite : Icons.favorite_border,
+                            color: isFavorite(items[index].name) ? Colors.red : Colors.grey,
+                            size: 20,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
                 const SizedBox(height: 8.0),
                 Text(
@@ -486,12 +553,14 @@ class ProduceListPageState extends State<ProduceListPage> {
             mini: true,
             heroTag: "alphabetical",
             onPressed: () {
-              // TODO: Implement alphabetical sorting
               setState(() {
+                _currentSort = SortType.alphabetical;
                 _isSortMenuExpanded = false;
               });
             },
-            backgroundColor: const Color(0xFF3B0D3A),
+            backgroundColor: _currentSort == SortType.alphabetical 
+                ? const Color(0xFF74ce9e) 
+                : const Color(0xFF3B0D3A),
             child: const Icon(
               Icons.sort_by_alpha,
               color: Colors.white,
@@ -502,12 +571,14 @@ class ProduceListPageState extends State<ProduceListPage> {
             mini: true,
             heroTag: "seasonal",
             onPressed: () {
-              // TODO: Implement seasonal sorting
               setState(() {
+                _currentSort = SortType.seasonal;
                 _isSortMenuExpanded = false;
               });
             },
-            backgroundColor: const Color(0xFF3B0D3A),
+            backgroundColor: _currentSort == SortType.seasonal 
+                ? const Color(0xFF74ce9e) 
+                : const Color(0xFF3B0D3A),
             child: const Icon(
               Icons.calendar_month,
               color: Colors.white,
@@ -518,12 +589,14 @@ class ProduceListPageState extends State<ProduceListPage> {
             mini: true,
             heroTag: "favorite",
             onPressed: () {
-              // TODO: Implement favorite sorting
               setState(() {
+                _currentSort = SortType.favorite;
                 _isSortMenuExpanded = false;
               });
             },
-            backgroundColor: const Color(0xFF3B0D3A),
+            backgroundColor: _currentSort == SortType.favorite 
+                ? const Color(0xFF74ce9e) 
+                : const Color(0xFF3B0D3A),
             child: const Icon(
               Icons.favorite,
               color: Colors.white,
@@ -532,5 +605,106 @@ class ProduceListPageState extends State<ProduceListPage> {
         ],
       ),
     );
+  }
+
+  List<ProduceItem> _sortItems(List<ProduceItem> items) {
+    switch (_currentSort) {
+      case SortType.alphabetical:
+        return List.from(items)..sort((a, b) => a.name.compareTo(b.name));
+      case SortType.seasonal:
+        return List.from(items)..sort((a, b) => _compareSeasonalPriority(a, b));
+      case SortType.favorite:
+        return List.from(items)..sort((a, b) => _compareFavoritePriority(a, b));
+      case SortType.none:
+      default:
+        return items;
+    }
+  }
+
+  int _compareSeasonalPriority(ProduceItem a, ProduceItem b) {
+    if (_selectedLocation == null) return 0;
+    
+    int currentMonth = DateTime.now().month;
+    List<int> aSeason = a.seasonalAvailability[_selectedLocation!] ?? [];
+    List<int> bSeason = b.seasonalAvailability[_selectedLocation!] ?? [];
+    
+    // Calculate how close to the center of their season each item is (peak season)
+    double aPeakScore = _calculatePeakSeasonScore(aSeason, currentMonth);
+    double bPeakScore = _calculatePeakSeasonScore(bSeason, currentMonth);
+    
+    // Higher peak score comes first
+    return bPeakScore.compareTo(aPeakScore);
+  }
+
+  double _calculatePeakSeasonScore(List<int> seasonMonths, int currentMonth) {
+    if (seasonMonths.isEmpty) return 0.0;
+    
+    // If only one month, and it's current month, it's peak season
+    if (seasonMonths.length == 1) {
+      return seasonMonths.contains(currentMonth) ? 1.0 : 0.0;
+    }
+    
+    // For multiple months, find the middle of the season
+    List<int> sortedMonths = List.from(seasonMonths)..sort();
+    
+    // Handle seasons that wrap around the year (e.g., Nov-Jan)
+    if (sortedMonths.last - sortedMonths.first > 6) {
+      // Season spans across year boundary
+      int midMonth = _findWrappedSeasonMiddle(sortedMonths);
+      return _distanceFromPeak(currentMonth, midMonth);
+    } else {
+      // Normal season within the year
+      double midMonth = (sortedMonths.first + sortedMonths.last) / 2.0;
+      return _distanceFromPeak(currentMonth, midMonth.round());
+    }
+  }
+
+  int _findWrappedSeasonMiddle(List<int> months) {
+    // For seasons like [1,2,3,11,12], find middle of the wrapped season
+    List<int> earlyMonths = months.where((m) => m <= 6).toList();
+    List<int> lateMonths = months.where((m) => m > 6).toList();
+    
+    if (earlyMonths.isNotEmpty && lateMonths.isNotEmpty) {
+      // Season wraps around year
+      int spanStart = lateMonths.first;
+      int spanEnd = earlyMonths.last + 12; // Adjust to next year
+      return ((spanStart + spanEnd) / 2).round() % 12;
+    }
+    
+    return months.first;
+  }
+
+  double _distanceFromPeak(int currentMonth, int peakMonth) {
+    int distance = (currentMonth - peakMonth).abs();
+    // Convert distance to score (closer to peak = higher score)
+    return 1.0 - (distance / 6.0);
+  }
+
+  void toggleFavorite(String itemName) {
+    setState(() {
+      if (_favorites.contains(itemName)) {
+        _favorites.remove(itemName);
+      } else {
+        _favorites.add(itemName);
+      }
+    });
+    _savePreferences();
+  }
+
+  bool isFavorite(String itemName) {
+    return _favorites.contains(itemName);
+  }
+
+  int _compareFavoritePriority(ProduceItem a, ProduceItem b) {
+    bool aIsFavorite = isFavorite(a.name);
+    bool bIsFavorite = isFavorite(b.name);
+    
+    // If both are favorites or both are not favorites, sort alphabetically
+    if (aIsFavorite == bIsFavorite) {
+      return a.name.compareTo(b.name);
+    }
+    
+    // Favorites come first
+    return aIsFavorite ? -1 : 1;
   }
 }
