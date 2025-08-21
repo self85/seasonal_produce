@@ -27,6 +27,7 @@ class ProduceListPageState extends State<ProduceListPage> {
   String? _selectedLanguage = "english";
   late List<ProduceItem> items;
   bool _isExpanded = false;
+  bool _isSortMenuExpanded = false;
 
   @override
   void initState() {
@@ -256,12 +257,17 @@ class ProduceListPageState extends State<ProduceListPage> {
               ),
             ],
           ),
+          if (_isExpanded) _buildExpandedMenu(),
+          if (_isSortMenuExpanded) _buildSortingMenu(),
         ],
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           setState(() {
             _isExpanded = !_isExpanded;
+            if (!_isExpanded) {
+              _isSortMenuExpanded = false;
+            }
           });
         },
         backgroundColor: const Color(0xFF3B0D3A),
@@ -439,6 +445,92 @@ class ProduceListPageState extends State<ProduceListPage> {
           ),
         );
       },
+    );
+  }
+
+  Widget _buildExpandedMenu() {
+    return Positioned(
+      bottom: 90,
+      right: 16,
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          FloatingActionButton(
+            mini: true,
+            heroTag: "sort",
+            onPressed: () {
+              setState(() {
+                _isSortMenuExpanded = !_isSortMenuExpanded;
+              });
+            },
+            backgroundColor: const Color(0xFF3B0D3A),
+            child: const Icon(
+              Icons.sort,
+              color: Colors.white,
+            ),
+          ),
+          const SizedBox(height: 32),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildSortingMenu() {
+    return Positioned(
+      bottom: 122,
+      right: 72,
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          FloatingActionButton(
+            mini: true,
+            heroTag: "alphabetical",
+            onPressed: () {
+              // TODO: Implement alphabetical sorting
+              setState(() {
+                _isSortMenuExpanded = false;
+              });
+            },
+            backgroundColor: const Color(0xFF3B0D3A),
+            child: const Icon(
+              Icons.sort_by_alpha,
+              color: Colors.white,
+            ),
+          ),
+          const SizedBox(width: 8),
+          FloatingActionButton(
+            mini: true,
+            heroTag: "seasonal",
+            onPressed: () {
+              // TODO: Implement seasonal sorting
+              setState(() {
+                _isSortMenuExpanded = false;
+              });
+            },
+            backgroundColor: const Color(0xFF3B0D3A),
+            child: const Icon(
+              Icons.calendar_month,
+              color: Colors.white,
+            ),
+          ),
+          const SizedBox(width: 8),
+          FloatingActionButton(
+            mini: true,
+            heroTag: "favorite",
+            onPressed: () {
+              // TODO: Implement favorite sorting
+              setState(() {
+                _isSortMenuExpanded = false;
+              });
+            },
+            backgroundColor: const Color(0xFF3B0D3A),
+            child: const Icon(
+              Icons.favorite,
+              color: Colors.white,
+            ),
+          ),
+        ],
+      ),
     );
   }
 }
