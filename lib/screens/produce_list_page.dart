@@ -401,8 +401,8 @@ class ProduceListPageState extends State<ProduceListPage> {
                       ),
                     ),
                     Positioned(
-                      top: 4,
-                      right: 4,
+                      bottom: 4,
+                      left: 4,
                       child: GestureDetector(
                         onTap: () => toggleFavorite(items[index].name),
                         child: Container(
@@ -473,8 +473,8 @@ class ProduceListPageState extends State<ProduceListPage> {
                       ),
                     ),
                     Positioned(
-                      top: 8,
-                      right: 8,
+                      bottom: 8,
+                      left: 8,
                       child: GestureDetector(
                         onTap: () => toggleFavorite(items[index].name),
                         child: Container(
@@ -514,7 +514,7 @@ class ProduceListPageState extends State<ProduceListPage> {
   Widget _buildExpandedMenu() {
     return Positioned(
       bottom: 90,
-      right: 16,
+      right: 20,
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
@@ -563,7 +563,7 @@ class ProduceListPageState extends State<ProduceListPage> {
 
   Widget _buildSortingMenu() {
     return Positioned(
-      bottom: 130,
+      bottom: 122,
       right: 72,
       child: Row(
         mainAxisSize: MainAxisSize.min,
@@ -716,7 +716,7 @@ class ProduceListPageState extends State<ProduceListPage> {
 
   Widget _buildViewMenu() {
     return Positioned(
-      bottom: 138,
+      bottom: 178,
       right: 72,
       child: Row(
         mainAxisSize: MainAxisSize.min,
