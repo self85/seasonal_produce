@@ -651,11 +651,11 @@ class ProduceListPageState extends State<ProduceListPage> {
     if (sortedMonths.last - sortedMonths.first > 6) {
       // Season spans across year boundary
       int midMonth = _findWrappedSeasonMiddle(sortedMonths);
-      return _distanceFromPeak(currentMonth, midMonth);
+      return _distanceFromPeak(currentMonth, midMonth.toDouble());
     } else {
       // Normal season within the year
       double midMonth = (sortedMonths.first + sortedMonths.last) / 2.0;
-      return _distanceFromPeak(currentMonth, midMonth.round());
+      return _distanceFromPeak(currentMonth, midMonth);
     }
   }
 
