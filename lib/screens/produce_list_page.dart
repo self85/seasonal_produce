@@ -26,6 +26,7 @@ class ProduceListPageState extends State<ProduceListPage> {
   String? _selectedLocation = "sweden";
   String? _selectedLanguage = "english";
   late List<ProduceItem> items;
+  bool _isExpanded = false;
 
   @override
   void initState() {
@@ -256,6 +257,18 @@ class ProduceListPageState extends State<ProduceListPage> {
             ],
           ),
         ],
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          setState(() {
+            _isExpanded = !_isExpanded;
+          });
+        },
+        backgroundColor: const Color(0xFF3B0D3A),
+        child: Icon(
+          _isExpanded ? Icons.close : Icons.add,
+          color: Colors.white,
+        ),
       ),
     );
   }
