@@ -36,7 +36,8 @@ class ProduceListPageState extends State<ProduceListPage> {
   late List<ProduceItem> items;
   bool _isExpanded = false;
   bool _isSortMenuExpanded = false;
-  SortType _currentSort = SortType.none;
+  bool _isViewMenuExpanded = false;
+  SortType _currentSort = SortType.alphabetical;
   Set<String> _favorites = {};
 
   @override
@@ -263,16 +264,10 @@ class ProduceListPageState extends State<ProduceListPage> {
       ),
       body: Stack(
         children: [
-          Column(
-            children: [
-              _buildViewSelectionButtons(),
-              Expanded(
-                child: _buildView(itemsInSeason),
-              ),
-            ],
-          ),
+          _buildView(itemsInSeason),
           if (_isExpanded) _buildExpandedMenu(),
           if (_isSortMenuExpanded) _buildSortingMenu(),
+          if (_isViewMenuExpanded) _buildViewMenu(),
         ],
       ),
       floatingActionButton: FloatingActionButton(
@@ -281,6 +276,7 @@ class ProduceListPageState extends State<ProduceListPage> {
             _isExpanded = !_isExpanded;
             if (!_isExpanded) {
               _isSortMenuExpanded = false;
+              _isViewMenuExpanded = false;
             }
           });
         },
@@ -522,12 +518,35 @@ class ProduceListPageState extends State<ProduceListPage> {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
+          // View options button
+          FloatingActionButton(
+            mini: true,
+            heroTag: "view",
+            onPressed: () {
+              setState(() {
+                _isViewMenuExpanded = !_isViewMenuExpanded;
+                if (_isViewMenuExpanded) {
+                  _isSortMenuExpanded = false;
+                }
+              });
+            },
+            backgroundColor: const Color(0xFF3B0D3A),
+            child: const Icon(
+              Icons.view_module,
+              color: Colors.white,
+            ),
+          ),
+          const SizedBox(height: 8),
+          // Sort button
           FloatingActionButton(
             mini: true,
             heroTag: "sort",
             onPressed: () {
               setState(() {
                 _isSortMenuExpanded = !_isSortMenuExpanded;
+                if (_isSortMenuExpanded) {
+                  _isViewMenuExpanded = false;
+                }
               });
             },
             backgroundColor: const Color(0xFF3B0D3A),
@@ -544,7 +563,7 @@ class ProduceListPageState extends State<ProduceListPage> {
 
   Widget _buildSortingMenu() {
     return Positioned(
-      bottom: 122,
+      bottom: 130,
       right: 72,
       child: Row(
         mainAxisSize: MainAxisSize.min,
@@ -693,6 +712,71 @@ class ProduceListPageState extends State<ProduceListPage> {
 
   bool isFavorite(String itemName) {
     return _favorites.contains(itemName);
+  }
+
+  Widget _buildViewMenu() {
+    return Positioned(
+      bottom: 138,
+      right: 72,
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          FloatingActionButton(
+            mini: true,
+            heroTag: "list_view",
+            onPressed: () {
+              setState(() {
+                _viewType = ViewType.list;
+                _isViewMenuExpanded = false;
+              });
+            },
+            backgroundColor: _viewType == ViewType.list 
+                ? const Color(0xFF74ce9e) 
+                : const Color(0xFF3B0D3A),
+            child: const Icon(
+              Icons.list,
+              color: Colors.white,
+            ),
+          ),
+          const SizedBox(width: 8),
+          FloatingActionButton(
+            mini: true,
+            heroTag: "grid_view",
+            onPressed: () {
+              setState(() {
+                _viewType = ViewType.icon;
+                _isViewMenuExpanded = false;
+              });
+            },
+            backgroundColor: _viewType == ViewType.icon 
+                ? const Color(0xFF74ce9e) 
+                : const Color(0xFF3B0D3A),
+            child: const Icon(
+              Icons.grid_view,
+              color: Colors.white,
+            ),
+          ),
+          const SizedBox(width: 8),
+          FloatingActionButton(
+            mini: true,
+            heroTag: "card_view",
+            onPressed: () {
+              setState(() {
+                _viewType = ViewType.card;
+                _isViewMenuExpanded = false;
+              });
+            },
+            backgroundColor: _viewType == ViewType.card 
+                ? const Color(0xFF74ce9e) 
+                : const Color(0xFF3B0D3A),
+            child: const Icon(
+              Icons.view_agenda,
+              color: Colors.white,
+            ),
+          ),
+        ],
+      ),
+    );
   }
 
   int _compareFavoritePriority(ProduceItem a, ProduceItem b) {
