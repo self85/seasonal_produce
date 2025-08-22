@@ -12,7 +12,7 @@ class AppLocalizationsSv extends AppLocalizations {
   String get appTitle => 'I SÄSONG';
 
   @override
-  String get settings => 'INSTÄLLNINGAR';
+  String get settings => 'PLATS';
 
   @override
   String get language => 'SPRÅK';

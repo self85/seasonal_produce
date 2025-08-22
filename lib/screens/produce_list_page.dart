@@ -2,7 +2,7 @@ import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
 import 'package:seasonal_produce/models/produce_item.dart';
-import 'package:seasonal_produce/generated/l10n.dart';
+import 'package:seasonal_produce/generated/app_localizations.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'settings_screen.dart';
 
@@ -39,6 +39,7 @@ class ProduceListPageState extends State<ProduceListPage> with SingleTickerProvi
   bool _isExpanded = false;
   bool _isSortMenuExpanded = false;
   bool _isViewMenuExpanded = false;
+  bool _isLanguageMenuExpanded = false;
   SortType _currentSort = SortType.alphabetical;
   Set<String> _favorites = {};
   AnimationController? _animationController;
@@ -79,151 +80,151 @@ class ProduceListPageState extends State<ProduceListPage> with SingleTickerProvi
   void didChangeDependencies() {
     super.didChangeDependencies();
     items = [
-      ProduceItem(S.of(context).apples, 'assets/produce/apple.jpeg', {
+      ProduceItem(AppLocalizations.of(context)!.apples, 'assets/produce/apple.jpeg', {
       'sweden': [1, 2, 3, 8, 9, 10, 11, 12],
       'andalucia': [9, 10, 11, 12]
     }),
-    ProduceItem(S.of(context).strawberries, 'assets/produce/strawberry.jpeg', {
+    ProduceItem(AppLocalizations.of(context)!.strawberries, 'assets/produce/strawberry.jpeg', {
       'sweden': [6, 7, 8],
       'andalucia': [3, 4, 5, 6]
     }),
-    ProduceItem(S.of(context).blueberries, 'assets/produce/blueberry.jpeg', {
+    ProduceItem(AppLocalizations.of(context)!.blueberries, 'assets/produce/blueberry.jpeg', {
       'sweden': [7, 8],
       'andalucia': [5, 6, 7]
     }),
-    ProduceItem(S.of(context).raspberries, 'assets/produce/raspberry.jpeg', {
+    ProduceItem(AppLocalizations.of(context)!.raspberries, 'assets/produce/raspberry.jpeg', {
       'sweden': [7, 8],
       'andalucia': [5, 6, 7, 8]
     }),
-    ProduceItem(S.of(context).mushrooms, 'assets/produce/mushroom.jpeg', {
+    ProduceItem(AppLocalizations.of(context)!.mushrooms, 'assets/produce/mushroom.jpeg', {
       'sweden': [7, 8, 9, 10],
       'andalucia': [1, 2, 3, 10, 11, 12]
     }),
-    ProduceItem(S.of(context).grapes, 'assets/produce/grape.jpeg', {
+    ProduceItem(AppLocalizations.of(context)!.grapes, 'assets/produce/grape.jpeg', {
       'sweden': [7, 8, 9, 10, 11, 12],
       'andalucia': [8, 9, 10]
     }),
-    ProduceItem(S.of(context).pears, 'assets/produce/pear.jpeg', {
+    ProduceItem(AppLocalizations.of(context)!.pears, 'assets/produce/pear.jpeg', {
       'sweden': [8, 9, 10, 11],
       'andalucia': [8, 9, 10, 11]
     }),
-    ProduceItem(S.of(context).plums, 'assets/produce/plum.jpeg', {
+    ProduceItem(AppLocalizations.of(context)!.plums, 'assets/produce/plum.jpeg', {
       'sweden': [8, 9, 10],
       'andalucia': [6, 7, 8]
     }),
-    ProduceItem(S.of(context).cherries, 'assets/produce/cherry.jpeg', {
+    ProduceItem(AppLocalizations.of(context)!.cherries, 'assets/produce/cherry.jpeg', {
       'sweden': [7, 8, 9],
       'andalucia': [5, 6, 7]
     }),
-    ProduceItem(S.of(context).beets, 'assets/produce/beet.jpeg', {
+    ProduceItem(AppLocalizations.of(context)!.beets, 'assets/produce/beet.jpeg', {
       'sweden': [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
       'andalucia': [1, 2, 3, 4, 5, 9, 10, 11, 12]
     }),
-    ProduceItem(S.of(context).potatoes, 'assets/produce/potato.jpeg', {
+    ProduceItem(AppLocalizations.of(context)!.potatoes, 'assets/produce/potato.jpeg', {
       'sweden': [5, 6, 7, 8, 9],
       'andalucia': [3, 4, 5, 6, 7]
     }),
-    ProduceItem(S.of(context).carrots, 'assets/produce/carrot.jpeg', {
+    ProduceItem(AppLocalizations.of(context)!.carrots, 'assets/produce/carrot.jpeg', {
       'sweden': [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
       'andalucia': [1, 2, 3, 4, 5, 6, 9, 10, 11, 12]
     }),
-    ProduceItem(S.of(context).broccoli, 'assets/produce/broccoli.jpeg', {
+    ProduceItem(AppLocalizations.of(context)!.broccoli, 'assets/produce/broccoli.jpeg', {
       'sweden': [6, 7, 8, 9, 10, 11],
       'andalucia': [11, 12, 1, 2, 3, 4]
     }),
-    ProduceItem(S.of(context).cauliflower, 'assets/produce/cauliflower.jpeg', {
+    ProduceItem(AppLocalizations.of(context)!.cauliflower, 'assets/produce/cauliflower.jpeg', {
       'sweden': [5, 6, 7, 8, 9, 10, 11, 12],
       'andalucia': [10, 11, 12, 1, 2, 3]
     }),
-    ProduceItem(S.of(context).peas, 'assets/produce/pea.jpeg', {
+    ProduceItem(AppLocalizations.of(context)!.peas, 'assets/produce/pea.jpeg', {
       'sweden': [6, 7, 8, 9, 10],
       'andalucia': [4, 5, 6]
     }),
-    ProduceItem(S.of(context).cabbage, 'assets/produce/cabbage.jpeg', {
+    ProduceItem(AppLocalizations.of(context)!.cabbage, 'assets/produce/cabbage.jpeg', {
       'sweden': [1, 2, 3, 4, 7, 8, 9, 10, 11, 12],
       'andalucia': [10, 11, 12, 1, 2, 3, 4]
     }),
-    ProduceItem(S.of(context).kale, 'assets/produce/kale.jpeg', {
+    ProduceItem(AppLocalizations.of(context)!.kale, 'assets/produce/kale.jpeg', {
       'sweden': [1, 2, 10, 11, 12],
       'andalucia': [11, 12, 1, 2]
     }),
-    ProduceItem(S.of(context).brusselsSprouts, 'assets/produce/brusselsprout.jpeg', {
+    ProduceItem(AppLocalizations.of(context)!.brusselsSprouts, 'assets/produce/brusselsprout.jpeg', {
       'sweden': [1, 2, 3, 9, 10, 11, 12],
       'andalucia': [11, 12, 1, 2]
     }),
-    ProduceItem(S.of(context).papaya, 'assets/produce/papaya.jpeg', {
+    ProduceItem(AppLocalizations.of(context)!.papaya, 'assets/produce/papaya.jpeg', {
       'sweden': [1, 2, 3, 4, 5, 6, 11, 12],
       'andalucia': [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
     }),
-    ProduceItem(S.of(context).pineapple, 'assets/produce/pineapple.jpeg', {
+    ProduceItem(AppLocalizations.of(context)!.pineapple, 'assets/produce/pineapple.jpeg', {
       'sweden': [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
       'andalucia': [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
     }),
-    ProduceItem(S.of(context).mango, 'assets/produce/mango.jpeg', {
+    ProduceItem(AppLocalizations.of(context)!.mango, 'assets/produce/mango.jpeg', {
       'sweden': [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
       'andalucia': [8, 9, 10]
     }),
-    ProduceItem(S.of(context).passionfruit, 'assets/produce/passionfruit.jpeg', {
+    ProduceItem(AppLocalizations.of(context)!.passionfruit, 'assets/produce/passionfruit.jpeg', {
       'sweden': [1, 2, 3, 4, 7, 8, 9, 10, 12],
       'andalucia': [8, 9, 10]
     }),
-    ProduceItem(S.of(context).kiwi, 'assets/produce/kiwi.jpeg', {
+    ProduceItem(AppLocalizations.of(context)!.kiwi, 'assets/produce/kiwi.jpeg', {
       'sweden': [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
       'andalucia': [11, 12, 1, 2, 3, 4]
     }),
-    ProduceItem(S.of(context).lychee, 'assets/produce/lychee.jpeg', {
+    ProduceItem(AppLocalizations.of(context)!.lychee, 'assets/produce/lychee.jpeg', {
       'sweden': [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
       'andalucia': [7, 8]
     }),
-    ProduceItem(S.of(context).pomegranate, 'assets/produce/pomegranate.jpeg', {
+    ProduceItem(AppLocalizations.of(context)!.pomegranate, 'assets/produce/pomegranate.jpeg', {
       'sweden': [1, 2, 3, 9, 10, 11, 12],
       'andalucia': [9, 10, 11, 12]
     }),
-    ProduceItem(S.of(context).coconut, 'assets/produce/coconut.jpeg', {
+    ProduceItem(AppLocalizations.of(context)!.coconut, 'assets/produce/coconut.jpeg', {
       'sweden': [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
       'andalucia': [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
     }),
-    ProduceItem(S.of(context).avocado, 'assets/produce/avocado.jpeg', {
+    ProduceItem(AppLocalizations.of(context)!.avocado, 'assets/produce/avocado.jpeg', {
       'sweden': [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
       'andalucia': [10, 11, 12, 1, 2, 3, 4, 5]
     }),
-    ProduceItem(S.of(context).oranges, 'assets/produce/orange.jpeg', {
+    ProduceItem(AppLocalizations.of(context)!.oranges, 'assets/produce/orange.jpeg', {
       'sweden': [], 
       'andalucia': [1, 2, 3, 10, 11, 12]
     }),
-    ProduceItem(S.of(context).lemons, 'assets/produce/lemon.jpeg', {
+    ProduceItem(AppLocalizations.of(context)!.lemons, 'assets/produce/lemon.jpeg', {
       'sweden': [], 
       'andalucia': [1, 2, 3, 10, 11, 12]
     }),
-    ProduceItem(S.of(context).olives, 'assets/produce/olive.jpeg', {
+    ProduceItem(AppLocalizations.of(context)!.olives, 'assets/produce/olive.jpeg', {
       'sweden': [], 
       'andalucia': [10, 11, 12, 1, 2, 3]
     }),
-    ProduceItem(S.of(context).almonds, 'assets/produce/almond.jpeg', {
+    ProduceItem(AppLocalizations.of(context)!.almonds, 'assets/produce/almond.jpeg', {
       'sweden': [], 
       'andalucia': [8, 9, 10]
     }),
-    ProduceItem(S.of(context).figs, 'assets/produce/fig.jpeg', {
+    ProduceItem(AppLocalizations.of(context)!.figs, 'assets/produce/fig.jpeg', {
       'sweden': [], 
       'andalucia': [7, 8, 9]
     }),
-    ProduceItem(S.of(context).lingonberries, 'assets/produce/lingonberry.jpeg', {
+    ProduceItem(AppLocalizations.of(context)!.lingonberries, 'assets/produce/lingonberry.jpeg', {
       'sweden': [8, 9, 10],
       'andalucia': [] 
     }),
-    ProduceItem(S.of(context).cloudberries, 'assets/produce/cloudberry.jpeg', {
+    ProduceItem(AppLocalizations.of(context)!.cloudberries, 'assets/produce/cloudberry.jpeg', {
       'sweden': [7, 8],
       'andalucia': [] 
     }),
-    ProduceItem(S.of(context).rhubarb, 'assets/produce/rhubarb.jpeg', {
+    ProduceItem(AppLocalizations.of(context)!.rhubarb, 'assets/produce/rhubarb.jpeg', {
       'sweden': [5, 6, 7],
       'andalucia': []
     }),
-    ProduceItem(S.of(context).cranberries, 'assets/produce/cranberry.jpeg', {
+    ProduceItem(AppLocalizations.of(context)!.cranberries, 'assets/produce/cranberry.jpeg', {
       'sweden': [9, 10],
       'andalucia': [] 
     }),
-    ProduceItem(S.of(context).blackcurrants, 'assets/produce/blackcurrant.jpeg', {
+    ProduceItem(AppLocalizations.of(context)!.blackcurrants, 'assets/produce/blackcurrant.jpeg', {
       'sweden': [7, 8],
       'andalucia': [] 
     })
@@ -234,7 +235,7 @@ class ProduceListPageState extends State<ProduceListPage> with SingleTickerProvi
 
   @override
   Widget build(BuildContext context) {
-    final String appTitle = S.of(context).appTitle;
+    final String appTitle = AppLocalizations.of(context)!.appTitle;
     int currentMonth = DateTime.now().month;
     var itemsInSeason = _selectedLocation != null
         ? items.where((item) => item.isInSeason(_selectedLocation!, currentMonth)).toList()
@@ -252,7 +253,7 @@ class ProduceListPageState extends State<ProduceListPage> with SingleTickerProvi
         ),
         actions: [
           IconButton(
-            icon: const Icon(Icons.settings, color: Colors.white),
+            icon: const Icon(Icons.location_pin, color: Colors.white),
             onPressed: () async {
                 final result = await Navigator.push(
                   context,
@@ -281,6 +282,7 @@ class ProduceListPageState extends State<ProduceListPage> with SingleTickerProvi
           if (_isExpanded) _buildExpandedMenu(),
           if (_isSortMenuExpanded) _buildSortingMenu(),
           if (_isViewMenuExpanded) _buildViewMenu(),
+          if (_isLanguageMenuExpanded) _buildLanguageMenu(),
         ],
       ),
       floatingActionButton: FloatingActionButton(
@@ -293,6 +295,7 @@ class ProduceListPageState extends State<ProduceListPage> with SingleTickerProvi
               _animationController?.reverse();
               _isSortMenuExpanded = false;
               _isViewMenuExpanded = false;
+              _isLanguageMenuExpanded = false;
             }
           });
         },
@@ -375,19 +378,19 @@ class ProduceListPageState extends State<ProduceListPage> with SingleTickerProvi
       itemCount: items.length,
       itemBuilder: (context, index) {
         return ListTile(
+          leading: IconButton(
+            icon: Icon(
+              isFavorite(items[index].name) ? Icons.favorite : Icons.favorite_border,
+              color: isFavorite(items[index].name) ? Colors.red : Colors.grey,
+            ),
+            onPressed: () => toggleFavorite(items[index].name),
+          ),
           title: Text(
             items[index].name,
             style: const TextStyle(
               fontSize: 20.0,
               color: Color(0xFF240041),
             ),
-          ),
-          trailing: IconButton(
-            icon: Icon(
-              isFavorite(items[index].name) ? Icons.favorite : Icons.favorite_border,
-              color: isFavorite(items[index].name) ? Colors.red : Colors.grey,
-            ),
-            onPressed: () => toggleFavorite(items[index].name),
           ),
         );
       },
@@ -432,8 +435,8 @@ class ProduceListPageState extends State<ProduceListPage> with SingleTickerProvi
                       ),
                     ),
                     Positioned(
-                      bottom: 4,
-                      left: 4,
+                      bottom: 15,
+                      left: 3,
                       child: GestureDetector(
                         onTap: () => toggleFavorite(items[index].name),
                         child: Container(
@@ -558,12 +561,33 @@ class ProduceListPageState extends State<ProduceListPage> with SingleTickerProvi
                 _isViewMenuExpanded = !_isViewMenuExpanded;
                 if (_isViewMenuExpanded) {
                   _isSortMenuExpanded = false;
+                  _isLanguageMenuExpanded = false;
                 }
               });
             },
             backgroundColor: const Color(0xFF3B0D3A),
             child: const Icon(
               Icons.view_module,
+              color: Colors.white,
+            ),
+          ),
+          const SizedBox(height: 8),
+          // Language button
+          FloatingActionButton(
+            mini: true,
+            heroTag: "language",
+            onPressed: () {
+              setState(() {
+                _isLanguageMenuExpanded = !_isLanguageMenuExpanded;
+                if (_isLanguageMenuExpanded) {
+                  _isSortMenuExpanded = false;
+                  _isViewMenuExpanded = false;
+                }
+              });
+            },
+            backgroundColor: const Color(0xFF3B0D3A),
+            child: const Icon(
+              Icons.language,
               color: Colors.white,
             ),
           ),
@@ -577,6 +601,7 @@ class ProduceListPageState extends State<ProduceListPage> with SingleTickerProvi
                 _isSortMenuExpanded = !_isSortMenuExpanded;
                 if (_isSortMenuExpanded) {
                   _isViewMenuExpanded = false;
+                  _isLanguageMenuExpanded = false;
                 }
               });
             },
@@ -747,7 +772,7 @@ class ProduceListPageState extends State<ProduceListPage> with SingleTickerProvi
 
   Widget _buildViewMenu() {
     return Positioned(
-      bottom: 178,
+      bottom: 234,
       right: 72,
       child: Row(
         mainAxisSize: MainAxisSize.min,
@@ -803,6 +828,89 @@ class ProduceListPageState extends State<ProduceListPage> with SingleTickerProvi
             child: const Icon(
               Icons.view_agenda,
               color: Colors.white,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildLanguageMenu() {
+    return Positioned(
+      bottom: 178,
+      right: 72,
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          FloatingActionButton(
+            mini: true,
+            heroTag: "swedish",
+            onPressed: () {
+              setState(() {
+                _selectedLanguage = "swedish";
+                _isLanguageMenuExpanded = false;
+              });
+              widget.onLocaleChange(const Locale('sv'));
+              _savePreferences();
+            },
+            backgroundColor: _selectedLanguage == "swedish" 
+                ? const Color(0xFF74ce9e) 
+                : const Color(0xFF3B0D3A),
+            child: const Text(
+              'SV',
+              style: TextStyle(
+                color: Colors.white,
+                fontWeight: FontWeight.bold,
+                fontSize: 12,
+              ),
+            ),
+          ),
+          const SizedBox(width: 8),
+          FloatingActionButton(
+            mini: true,
+            heroTag: "english",
+            onPressed: () {
+              setState(() {
+                _selectedLanguage = "english";
+                _isLanguageMenuExpanded = false;
+              });
+              widget.onLocaleChange(const Locale('en'));
+              _savePreferences();
+            },
+            backgroundColor: _selectedLanguage == "english" 
+                ? const Color(0xFF74ce9e) 
+                : const Color(0xFF3B0D3A),
+            child: const Text(
+              'EN',
+              style: TextStyle(
+                color: Colors.white,
+                fontWeight: FontWeight.bold,
+                fontSize: 12,
+              ),
+            ),
+          ),
+          const SizedBox(width: 8),
+          FloatingActionButton(
+            mini: true,
+            heroTag: "spanish",
+            onPressed: () {
+              setState(() {
+                _selectedLanguage = "spanish";
+                _isLanguageMenuExpanded = false;
+              });
+              widget.onLocaleChange(const Locale('es'));
+              _savePreferences();
+            },
+            backgroundColor: _selectedLanguage == "spanish" 
+                ? const Color(0xFF74ce9e) 
+                : const Color(0xFF3B0D3A),
+            child: const Text(
+              'ES',
+              style: TextStyle(
+                color: Colors.white,
+                fontWeight: FontWeight.bold,
+                fontSize: 12,
+              ),
             ),
           ),
         ],

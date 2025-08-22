@@ -2,8 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:seasonal_produce/l10n/app_localizations.dart';
-import 'package:seasonal_produce/generated/l10n.dart';
+import 'package:seasonal_produce/generated/app_localizations.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'screens/produce_list_page.dart';
 
@@ -77,7 +76,6 @@ class InSeasonAppState extends State<InSeasonApp> {
         ),
       ),
       localizationsDelegates: [
-        S.delegate,
         AppLocalizations.delegate,
         GlobalMaterialLocalizations.delegate,
         GlobalWidgetsLocalizations.delegate,

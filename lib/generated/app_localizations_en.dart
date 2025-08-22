@@ -12,7 +12,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get appTitle => 'IN SEASON';
 
   @override
-  String get settings => 'SETTINGS';
+  String get settings => 'LOCATION';
 
   @override
   String get language => 'LANGUAGE';
