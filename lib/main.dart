@@ -66,10 +66,10 @@ class InSeasonAppState extends State<InSeasonApp> {
         ),
         cardTheme: CardThemeData(
           elevation: 12.0,
-          shadowColor: Colors.black.withOpacity(0.4),
+          shadowColor: Colors.black.withValues(alpha: 0.4),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(15.0),
-            side: BorderSide(color: Colors.grey.withOpacity(0.7), width: 2),
+            side: BorderSide(color: Colors.grey.withValues(alpha: 0.7), width: 2),
           ),
           color: Colors.white,
           margin: const EdgeInsets.all(16.0),
