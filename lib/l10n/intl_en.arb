@@ -4,6 +4,8 @@
   "settings": "LOCATION",
   "language": "LANGUAGE",
   "location": "LOCATION",
+  "nutrition": "NUTRITION",
+  "kcal": "calories per 100g",
   "sweden": "Sweden",
   "andalucia": "Andalucia",
   "swedish": "Swedish",

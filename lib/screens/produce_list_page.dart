@@ -32,7 +32,7 @@ class ProduceListPage extends StatefulWidget {
   ProduceListPageState createState() => ProduceListPageState();
 }
 
-class ProduceListPageState extends State<ProduceListPage> with SingleTickerProviderStateMixin {
+class ProduceListPageState extends State<ProduceListPage> with TickerProviderStateMixin {
   String? _selectedLocation = "sweden";
   String? _selectedLanguage = "english";
   late List<ProduceItem> items;
@@ -43,6 +43,7 @@ class ProduceListPageState extends State<ProduceListPage> with SingleTickerProvi
   SortType _currentSort = SortType.none;
   Set<String> _favorites = {};
   AnimationController? _animationController;
+  Map<String, AnimationController> _flipControllers = {};
 
   @override
   void initState() {
@@ -73,6 +74,9 @@ class ProduceListPageState extends State<ProduceListPage> with SingleTickerProvi
   @override
   void dispose() {
     _animationController?.dispose();
+    for (var controller in _flipControllers.values) {
+      controller.dispose();
+    }
     super.dispose();
   }
 
@@ -83,151 +87,151 @@ class ProduceListPageState extends State<ProduceListPage> with SingleTickerProvi
       ProduceItem(AppLocalizations.of(context)!.apples, 'assets/produce/apple.jpeg', {
       'sweden': [1, 2, 3, 8, 9, 10, 11, 12],
       'andalucia': [9, 10, 11, 12]
-    }),
+    }, NutritionInfo(carbs: 14.0, fats: 0.2, proteins: 0.3, calories: 52)),
     ProduceItem(AppLocalizations.of(context)!.strawberries, 'assets/produce/strawberry.jpeg', {
       'sweden': [6, 7, 8],
       'andalucia': [3, 4, 5, 6]
-    }),
+    }, NutritionInfo(carbs: 7.7, fats: 0.3, proteins: 0.7, calories: 32)),
     ProduceItem(AppLocalizations.of(context)!.blueberries, 'assets/produce/blueberry.jpeg', {
       'sweden': [7, 8],
       'andalucia': [5, 6, 7]
-    }),
+    }, _getDefaultNutrition()),
     ProduceItem(AppLocalizations.of(context)!.raspberries, 'assets/produce/raspberry.jpeg', {
       'sweden': [7, 8],
       'andalucia': [5, 6, 7, 8]
-    }),
+    }, _getDefaultNutrition()),
     ProduceItem(AppLocalizations.of(context)!.mushrooms, 'assets/produce/mushroom.jpeg', {
       'sweden': [7, 8, 9, 10],
       'andalucia': [1, 2, 3, 10, 11, 12]
-    }),
+    }, _getDefaultNutrition()),
     ProduceItem(AppLocalizations.of(context)!.grapes, 'assets/produce/grape.jpeg', {
       'sweden': [7, 8, 9, 10, 11, 12],
       'andalucia': [8, 9, 10]
-    }),
+    }, _getDefaultNutrition()),
     ProduceItem(AppLocalizations.of(context)!.pears, 'assets/produce/pear.jpeg', {
       'sweden': [8, 9, 10, 11],
       'andalucia': [8, 9, 10, 11]
-    }),
+    }, _getDefaultNutrition()),
     ProduceItem(AppLocalizations.of(context)!.plums, 'assets/produce/plum.jpeg', {
       'sweden': [8, 9, 10],
       'andalucia': [6, 7, 8]
-    }),
+    }, _getDefaultNutrition()),
     ProduceItem(AppLocalizations.of(context)!.cherries, 'assets/produce/cherry.jpeg', {
       'sweden': [7, 8, 9],
       'andalucia': [5, 6, 7]
-    }),
+    }, _getDefaultNutrition()),
     ProduceItem(AppLocalizations.of(context)!.beets, 'assets/produce/beet.jpeg', {
       'sweden': [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
       'andalucia': [1, 2, 3, 4, 5, 9, 10, 11, 12]
-    }),
+    }, _getDefaultNutrition()),
     ProduceItem(AppLocalizations.of(context)!.potatoes, 'assets/produce/potato.jpeg', {
       'sweden': [5, 6, 7, 8, 9],
       'andalucia': [3, 4, 5, 6, 7]
-    }),
+    }, _getDefaultNutrition()),
     ProduceItem(AppLocalizations.of(context)!.carrots, 'assets/produce/carrot.jpeg', {
       'sweden': [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
       'andalucia': [1, 2, 3, 4, 5, 6, 9, 10, 11, 12]
-    }),
+    }, _getDefaultNutrition()),
     ProduceItem(AppLocalizations.of(context)!.broccoli, 'assets/produce/broccoli.jpeg', {
       'sweden': [6, 7, 8, 9, 10, 11],
       'andalucia': [11, 12, 1, 2, 3, 4]
-    }),
+    }, _getDefaultNutrition()),
     ProduceItem(AppLocalizations.of(context)!.cauliflower, 'assets/produce/cauliflower.jpeg', {
       'sweden': [5, 6, 7, 8, 9, 10, 11, 12],
       'andalucia': [10, 11, 12, 1, 2, 3]
-    }),
+    }, _getDefaultNutrition()),
     ProduceItem(AppLocalizations.of(context)!.peas, 'assets/produce/pea.jpeg', {
       'sweden': [6, 7, 8, 9, 10],
       'andalucia': [4, 5, 6]
-    }),
+    }, _getDefaultNutrition()),
     ProduceItem(AppLocalizations.of(context)!.cabbage, 'assets/produce/cabbage.jpeg', {
       'sweden': [1, 2, 3, 4, 7, 8, 9, 10, 11, 12],
       'andalucia': [10, 11, 12, 1, 2, 3, 4]
-    }),
+    }, _getDefaultNutrition()),
     ProduceItem(AppLocalizations.of(context)!.kale, 'assets/produce/kale.jpeg', {
       'sweden': [1, 2, 10, 11, 12],
       'andalucia': [11, 12, 1, 2]
-    }),
+    }, _getDefaultNutrition()),
     ProduceItem(AppLocalizations.of(context)!.brusselsSprouts, 'assets/produce/brusselsprout.jpeg', {
       'sweden': [1, 2, 3, 9, 10, 11, 12],
       'andalucia': [11, 12, 1, 2]
-    }),
+    }, _getDefaultNutrition()),
     ProduceItem(AppLocalizations.of(context)!.papaya, 'assets/produce/papaya.jpeg', {
       'sweden': [1, 2, 3, 4, 5, 6, 11, 12],
       'andalucia': [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
-    }),
+    }, _getDefaultNutrition()),
     ProduceItem(AppLocalizations.of(context)!.pineapple, 'assets/produce/pineapple.jpeg', {
       'sweden': [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
       'andalucia': [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
-    }),
+    }, _getDefaultNutrition()),
     ProduceItem(AppLocalizations.of(context)!.mango, 'assets/produce/mango.jpeg', {
       'sweden': [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
       'andalucia': [8, 9, 10]
-    }),
+    }, _getDefaultNutrition()),
     ProduceItem(AppLocalizations.of(context)!.passionfruit, 'assets/produce/passionfruit.jpeg', {
       'sweden': [1, 2, 3, 4, 7, 8, 9, 10, 12],
       'andalucia': [8, 9, 10]
-    }),
+    }, _getDefaultNutrition()),
     ProduceItem(AppLocalizations.of(context)!.kiwi, 'assets/produce/kiwi.jpeg', {
       'sweden': [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
       'andalucia': [11, 12, 1, 2, 3, 4]
-    }),
+    }, _getDefaultNutrition()),
     ProduceItem(AppLocalizations.of(context)!.lychee, 'assets/produce/lychee.jpeg', {
       'sweden': [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
       'andalucia': [7, 8]
-    }),
+    }, _getDefaultNutrition()),
     ProduceItem(AppLocalizations.of(context)!.pomegranate, 'assets/produce/pomegranate.jpeg', {
       'sweden': [1, 2, 3, 9, 10, 11, 12],
       'andalucia': [9, 10, 11, 12]
-    }),
+    }, _getDefaultNutrition()),
     ProduceItem(AppLocalizations.of(context)!.coconut, 'assets/produce/coconut.jpeg', {
       'sweden': [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
       'andalucia': [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
-    }),
+    }, _getDefaultNutrition()),
     ProduceItem(AppLocalizations.of(context)!.avocado, 'assets/produce/avocado.jpeg', {
       'sweden': [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
       'andalucia': [10, 11, 12, 1, 2, 3, 4, 5]
-    }),
+    }, _getDefaultNutrition()),
     ProduceItem(AppLocalizations.of(context)!.oranges, 'assets/produce/orange.jpeg', {
       'sweden': [], 
       'andalucia': [1, 2, 3, 10, 11, 12]
-    }),
+    }, _getDefaultNutrition()),
     ProduceItem(AppLocalizations.of(context)!.lemons, 'assets/produce/lemon.jpeg', {
       'sweden': [], 
       'andalucia': [1, 2, 3, 10, 11, 12]
-    }),
+    }, _getDefaultNutrition()),
     ProduceItem(AppLocalizations.of(context)!.olives, 'assets/produce/olive.jpeg', {
       'sweden': [], 
       'andalucia': [10, 11, 12, 1, 2, 3]
-    }),
+    }, _getDefaultNutrition()),
     ProduceItem(AppLocalizations.of(context)!.almonds, 'assets/produce/almond.jpeg', {
       'sweden': [], 
       'andalucia': [8, 9, 10]
-    }),
+    }, _getDefaultNutrition()),
     ProduceItem(AppLocalizations.of(context)!.figs, 'assets/produce/fig.jpeg', {
       'sweden': [], 
       'andalucia': [7, 8, 9]
-    }),
+    }, _getDefaultNutrition()),
     ProduceItem(AppLocalizations.of(context)!.lingonberries, 'assets/produce/lingonberry.jpeg', {
       'sweden': [8, 9, 10],
       'andalucia': [] 
-    }),
+    }, _getDefaultNutrition()),
     ProduceItem(AppLocalizations.of(context)!.cloudberries, 'assets/produce/cloudberry.jpeg', {
       'sweden': [7, 8],
       'andalucia': [] 
-    }),
+    }, _getDefaultNutrition()),
     ProduceItem(AppLocalizations.of(context)!.rhubarb, 'assets/produce/rhubarb.jpeg', {
       'sweden': [5, 6, 7],
       'andalucia': []
-    }),
+    }, _getDefaultNutrition()),
     ProduceItem(AppLocalizations.of(context)!.cranberries, 'assets/produce/cranberry.jpeg', {
       'sweden': [9, 10],
       'andalucia': [] 
-    }),
+    }, _getDefaultNutrition()),
     ProduceItem(AppLocalizations.of(context)!.blackcurrants, 'assets/produce/blackcurrant.jpeg', {
       'sweden': [7, 8],
       'andalucia': [] 
-    })
+    }, _getDefaultNutrition())
     ];
   }
 
@@ -446,59 +450,35 @@ class ProduceListPageState extends State<ProduceListPage> with SingleTickerProvi
     return ListView.builder(
       itemCount: items.length,
       itemBuilder: (context, index) {
+        final item = items[index];
+        final itemKey = '${item.name}_$index';
+        
+        // Create animation controller for this card if not exists
+        if (!_flipControllers.containsKey(itemKey)) {
+          _flipControllers[itemKey] = AnimationController(
+            duration: const Duration(milliseconds: 600),
+            vsync: this,
+          );
+        }
+        
         return Padding(
           padding: const EdgeInsets.all(10.0),
-          child: ClipRRect(
-            borderRadius: BorderRadius.circular(15.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: <Widget>[
-                Stack(
-                  children: [
-                    ClipRRect(
-                      borderRadius: const BorderRadius.vertical(
-                        top: Radius.circular(15),
-                        bottom: Radius.circular(15),
-                      ),
-                      child: Image.asset(
-                        items[index].imagePath,
-                        fit: BoxFit.cover,
-                        width: MediaQuery.of(context).size.width - 20.0,
-                        height: 250,
-                      ),
-                    ),
-                    Positioned(
-                      bottom: 8,
-                      left: 8,
-                      child: GestureDetector(
-                        onTap: () => toggleFavorite(items[index].name),
-                        child: Container(
-                          padding: const EdgeInsets.all(8),
-                          decoration: BoxDecoration(
-                            color: Colors.white.withValues(alpha: 0.9),
-                            borderRadius: BorderRadius.circular(20),
-                          ),
-                          child: Icon(
-                            isFavorite(items[index].name) ? Icons.favorite : Icons.favorite_border,
-                            color: isFavorite(items[index].name) ? Colors.red : Colors.grey,
-                            size: 20,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 8.0),
-                Text(
-                  items[index].name,
-                  textAlign: TextAlign.center,
-                  style: const TextStyle(
-                    fontSize: 30.0,
-                    fontWeight: FontWeight.normal,
-                    fontFamily: 'BebasNeue',
-                  ),
-                ),
-              ],
+          child: GestureDetector(
+            onTap: () => _flipCard(itemKey),
+            child: AnimatedBuilder(
+              animation: _flipControllers[itemKey]!,
+              builder: (context, child) {
+                final isShowingBack = _flipControllers[itemKey]!.value > 0.5;
+                return Transform(
+                  alignment: Alignment.center,
+                  transform: Matrix4.identity()
+                    ..setEntry(3, 2, 0.001)
+                    ..rotateY(_flipControllers[itemKey]!.value * math.pi),
+                  child: isShowingBack 
+                    ? _buildNutritionCard(item)
+                    : _buildFrontCard(item),
+                );
+              },
             ),
           ),
         );
@@ -728,6 +708,187 @@ class ProduceListPageState extends State<ProduceListPage> with SingleTickerProvi
 
   bool isFavorite(String itemName) {
     return _favorites.contains(itemName);
+  }
+
+  NutritionInfo _getDefaultNutrition() {
+    return NutritionInfo(carbs: 12.0, fats: 0.3, proteins: 1.0, calories: 50);
+  }
+
+  void _flipCard(String itemKey) {
+    if (_flipControllers[itemKey]!.value == 0) {
+      _flipControllers[itemKey]!.forward();
+    } else {
+      _flipControllers[itemKey]!.reverse();
+    }
+  }
+
+  Widget _buildFrontCard(ProduceItem item) {
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(15.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: <Widget>[
+          Stack(
+            children: [
+              ClipRRect(
+                borderRadius: const BorderRadius.vertical(
+                  top: Radius.circular(15),
+                  bottom: Radius.circular(15),
+                ),
+                child: Image.asset(
+                  item.imagePath,
+                  fit: BoxFit.cover,
+                  width: MediaQuery.of(context).size.width - 20.0,
+                  height: 250,
+                ),
+              ),
+              Positioned(
+                bottom: 8,
+                left: 8,
+                child: GestureDetector(
+                  onTap: () => toggleFavorite(item.name),
+                  child: Container(
+                    padding: const EdgeInsets.all(8),
+                    decoration: BoxDecoration(
+                      color: Colors.white.withValues(alpha: 0.9),
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                    child: Icon(
+                      isFavorite(item.name) ? Icons.favorite : Icons.favorite_border,
+                      color: isFavorite(item.name) ? Colors.red : Colors.grey,
+                      size: 20,
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 8.0),
+          Text(
+            item.name,
+            textAlign: TextAlign.center,
+            style: const TextStyle(
+              fontSize: 30.0,
+              fontWeight: FontWeight.normal,
+              fontFamily: 'BebasNeue',
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildNutritionCard(ProduceItem item) {
+    final nutrition = item.nutritionInfo;
+    final total = nutrition.carbs + nutrition.fats + nutrition.proteins;
+    
+    return Transform(
+      alignment: Alignment.center,
+      transform: Matrix4.identity()..rotateY(math.pi),
+      child: Container(
+        height: 300,
+        decoration: BoxDecoration(
+          color: const Color(0xFFD6FFEE),
+          borderRadius: BorderRadius.circular(15.0),
+          border: Border.all(color: const Color(0xFF3B0D3A), width: 2),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(
+                '${item.name} - ${AppLocalizations.of(context)!.nutrition}',
+                style: const TextStyle(
+                  fontSize: 24.0,
+                  fontWeight: FontWeight.bold,
+                  fontFamily: 'BebasNeue',
+                  color: Color(0xFF240041),
+                ),
+                textAlign: TextAlign.center,
+              ),
+              const SizedBox(height: 20),
+              Text(
+                '${nutrition.calories} ${AppLocalizations.of(context)!.kcal}',
+                style: const TextStyle(
+                  fontSize: 16.0,
+                  color: Color(0xFF240041),
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              const SizedBox(height: 20),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  _buildNutrientCircle('Carbs', nutrition.carbs, total, Colors.orange),
+                  _buildNutrientCircle('Fats', nutrition.fats, total, Colors.red),
+                  _buildNutrientCircle('Proteins', nutrition.proteins, total, Colors.green),
+                ],
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildNutrientCircle(String label, double value, double total, Color color) {
+    final percentage = total > 0 ? value / total : 0.0;
+    
+    return Column(
+      children: [
+        SizedBox(
+          width: 60,
+          height: 60,
+          child: Stack(
+            children: [
+              Container(
+                width: 60,
+                height: 60,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: Colors.grey[200],
+                ),
+              ),
+              Container(
+                width: 60,
+                height: 60,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: color.withValues(alpha: 0.2),
+                ),
+                child: Center(
+                  child: Text(
+                    '${(percentage * 100).toInt()}%',
+                    style: TextStyle(
+                      fontSize: 12,
+                      fontWeight: FontWeight.bold,
+                      color: color,
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+        const SizedBox(height: 8),
+        Text(
+          label,
+          style: const TextStyle(
+            fontSize: 12,
+            fontWeight: FontWeight.bold,
+            color: Color(0xFF240041),
+          ),
+        ),
+        Text(
+          '${value.toStringAsFixed(1)}g',
+          style: const TextStyle(
+            fontSize: 10,
+            color: Color(0xFF240041),
+          ),
+        ),
+      ],
+    );
   }
 
   Widget _buildViewMenu() {

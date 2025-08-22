@@ -3,6 +3,8 @@
   "appTitle": "I SÄSONG",
   "settings": "PLATS",
   "language": "SPRÅK",
+  "nutrition": "NÄRINGSVÄRDE",
+  "kcal": "kalorier per 100g",
   "location": "PLATS",
   "sweden": "Sverige",
   "andalucia": "Andalusien",
