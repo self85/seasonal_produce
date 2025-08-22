@@ -43,9 +43,4 @@ app.*.map.json
 /android/app/debug
 /android/app/profile
 /android/app/release
-lib/generated/app_localizations_en.dart
-lib/generated/app_localizations_es.dart
-lib/generated/app_localizations_sv.dart
-lib/generated/l10n.dart
-lib/generated/app_localizations_en.dart
-lib/generated/app_localizations.dart
+lib/generated/
