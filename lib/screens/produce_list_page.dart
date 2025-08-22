@@ -40,7 +40,7 @@ class ProduceListPageState extends State<ProduceListPage> with SingleTickerProvi
   bool _isSortMenuExpanded = false;
   bool _isViewMenuExpanded = false;
   bool _isLanguageMenuExpanded = false;
-  SortType _currentSort = SortType.alphabetical;
+  SortType _currentSort = SortType.none;
   Set<String> _favorites = {};
   AnimationController? _animationController;
 
