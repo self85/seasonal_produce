@@ -44,6 +44,7 @@ class ProduceListPageState extends State<ProduceListPage> with TickerProviderSta
   Set<String> _favorites = {};
   AnimationController? _animationController;
   Map<String, AnimationController> _flipControllers = {};
+  Map<String, bool> _showDetailedNutrition = {};
 
   @override
   void initState() {
@@ -87,11 +88,32 @@ class ProduceListPageState extends State<ProduceListPage> with TickerProviderSta
       ProduceItem(AppLocalizations.of(context)!.apples, 'assets/produce/apple.jpeg', {
       'sweden': [1, 2, 3, 8, 9, 10, 11, 12],
       'andalucia': [9, 10, 11, 12]
-    }, NutritionInfo(carbs: 14.0, fats: 0.2, proteins: 0.3, calories: 52)),
+    }, NutritionInfo(
+        carbs: 10.6, 
+        fats: 0.05, 
+        proteins: 0.0, 
+        fiber: 2.4,
+        calories: 48,
+        detailedInfo: DetailedNutritionInfo(
+          saturatedFat: 0.01,
+          monounsaturatedFat: 0.01,
+          polyunsaturatedFat: 0.03,
+          vitaminA: 2.0,
+          vitaminC: 4.8,
+          vitaminK: 2.7,
+          vitaminE: 0.3,
+          folate: 2.9,
+          potassium: 62.0,
+          calcium: 3.0,
+          magnesium: 4.0,
+          phosphorus: 7.0,
+          iron: 0.1,
+        )
+      )),
     ProduceItem(AppLocalizations.of(context)!.strawberries, 'assets/produce/strawberry.jpeg', {
       'sweden': [6, 7, 8],
       'andalucia': [3, 4, 5, 6]
-    }, NutritionInfo(carbs: 7.7, fats: 0.3, proteins: 0.7, calories: 32)),
+    }, NutritionInfo(carbs: 7.7, fats: 0.3, proteins: 0.7, fiber: 2.0, calories: 32)),
     ProduceItem(AppLocalizations.of(context)!.blueberries, 'assets/produce/blueberry.jpeg', {
       'sweden': [7, 8],
       'andalucia': [5, 6, 7]
@@ -469,6 +491,13 @@ class ProduceListPageState extends State<ProduceListPage> with TickerProviderSta
               animation: _flipControllers[itemKey]!,
               builder: (context, child) {
                 final isShowingBack = _flipControllers[itemKey]!.value > 0.5;
+                final isDetailedView = _showDetailedNutrition[item.name] ?? false;
+                
+                // If showing detailed nutrition, return fullscreen without transform
+                if (isShowingBack && isDetailedView) {
+                  return _buildNutritionCard(item);
+                }
+                
                 return Transform(
                   alignment: Alignment.center,
                   transform: Matrix4.identity()
@@ -711,7 +740,7 @@ class ProduceListPageState extends State<ProduceListPage> with TickerProviderSta
   }
 
   NutritionInfo _getDefaultNutrition() {
-    return NutritionInfo(carbs: 12.0, fats: 0.3, proteins: 1.0, calories: 50);
+    return NutritionInfo(carbs: 12.0, fats: 0.3, proteins: 1.0, fiber: 2.5, calories: 50);
   }
 
   void _flipCard(String itemKey) {
@@ -780,13 +809,13 @@ class ProduceListPageState extends State<ProduceListPage> with TickerProviderSta
 
   Widget _buildNutritionCard(ProduceItem item) {
     final nutrition = item.nutritionInfo;
-    final total = nutrition.carbs + nutrition.fats + nutrition.proteins;
+    final total = nutrition.carbs + (nutrition.fiber ?? 2.0);
+    final isDetailedView = _showDetailedNutrition[item.name] ?? false;
     
-    return Transform(
-      alignment: Alignment.center,
-      transform: Matrix4.identity()..rotateY(math.pi),
-      child: Container(
-        height: 300,
+    // No special handling for detailed view - just use regular card
+    
+    Widget cardContent = Container(
+        height: isDetailedView ? 500 : 300,
         decoration: BoxDecoration(
           color: const Color(0xFFD6FFEE),
           borderRadius: BorderRadius.circular(15.0),
@@ -794,7 +823,41 @@ class ProduceListPageState extends State<ProduceListPage> with TickerProviderSta
         ),
         child: Padding(
           padding: const EdgeInsets.all(16.0),
-          child: Column(
+          child: isDetailedView ? Column(
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  IconButton(
+                    onPressed: () {
+                      setState(() {
+                        _showDetailedNutrition[item.name] = false;
+                      });
+                    },
+                    icon: const Icon(
+                      Icons.arrow_back,
+                      size: 24,
+                      color: Color(0xFF240041),
+                    ),
+                  ),
+                  Expanded(
+                    child: Text(
+                      '${item.name} - ${AppLocalizations.of(context)!.nutrition}',
+                      style: const TextStyle(
+                        fontSize: 20.0,
+                        fontWeight: FontWeight.bold,
+                        fontFamily: 'BebasNeue',
+                        color: Color(0xFF240041),
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
+                  const SizedBox(width: 48),
+                ],
+              ),
+              Expanded(child: _buildDetailedNutritionView(item)),
+            ],
+          ) : Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Text(
@@ -820,16 +883,41 @@ class ProduceListPageState extends State<ProduceListPage> with TickerProviderSta
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
-                  _buildNutrientCircle('Carbs', nutrition.carbs, total, Colors.orange),
-                  _buildNutrientCircle('Fats', nutrition.fats, total, Colors.red),
-                  _buildNutrientCircle('Proteins', nutrition.proteins, total, Colors.green),
+                  _buildNutrientDensityCircle(nutrition, Colors.orange),
+                  _buildFiberCircle(nutrition.fiber ?? 2.0, Colors.brown),
+                  _buildKeyVitaminsCircle(nutrition, Colors.purple),
                 ],
               ),
+              if (nutrition.detailedInfo != null) ...[
+                const SizedBox(height: 20),
+                ElevatedButton(
+                  onPressed: () {
+                    setState(() {
+                      _showDetailedNutrition[item.name] = true;
+                    });
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: const Color(0xFF74ce9e),
+                    foregroundColor: Colors.white,
+                  ),
+                  child: Text(AppLocalizations.of(context)!.detailedNutrition),
+                ),
+              ],
             ],
           ),
         ),
-      ),
-    );
+      );
+    
+    // Only apply flip transform if not showing detailed nutrition
+    if (isDetailedView) {
+      return cardContent;
+    } else {
+      return Transform(
+        alignment: Alignment.center,
+        transform: Matrix4.identity()..rotateY(math.pi),
+        child: cardContent,
+      );
+    }
   }
 
   Widget _buildNutrientCircle(String label, double value, double total, Color color) {
@@ -890,6 +978,532 @@ class ProduceListPageState extends State<ProduceListPage> with TickerProviderSta
       ],
     );
   }
+
+  Widget _buildNutrientDensityCircle(NutritionInfo nutrition, Color color) {
+    // Calculate RDI-to-Calorie score
+    double totalRDI = 0.0;
+    
+    if (nutrition.detailedInfo != null) {
+      final detailed = nutrition.detailedInfo!;
+      // Calculate RDI percentages for all nutrients
+      totalRDI += (nutrition.carbs / _driValues['carbs']!) * 100;
+      totalRDI += ((nutrition.fiber ?? 2.0) / _driValues['fiber']!) * 100;
+      totalRDI += (detailed.vitaminA / _driValues['vitaminA']!) * 100;
+      totalRDI += (detailed.vitaminC / _driValues['vitaminC']!) * 100;
+      totalRDI += (detailed.vitaminK / _driValues['vitaminK']!) * 100;
+      totalRDI += (detailed.vitaminE / _driValues['vitaminE']!) * 100;
+      totalRDI += (detailed.folate / _driValues['folate']!) * 100;
+      totalRDI += (detailed.potassium / _driValues['potassium']!) * 100;
+      totalRDI += (detailed.calcium / _driValues['calcium']!) * 100;
+      totalRDI += (detailed.magnesium / _driValues['magnesium']!) * 100;
+      totalRDI += (detailed.phosphorus / _driValues['phosphorus']!) * 100;
+      totalRDI += (detailed.iron / _driValues['iron']!) * 100;
+    } else {
+      // Basic calculation for items without detailed info
+      totalRDI += (nutrition.carbs / _driValues['carbs']!) * 100;
+      totalRDI += ((nutrition.fiber ?? 2.0) / _driValues['fiber']!) * 100;
+      totalRDI += (nutrition.fats / _driValues['fats']!) * 100;
+      totalRDI += (nutrition.proteins / _driValues['proteins']!) * 100;
+    }
+    
+    // Calculate RDI per calorie
+    final rdiPerCalorie = nutrition.calories > 0 ? totalRDI / nutrition.calories : 0.0;
+    
+    // Convert to 1-10 scale (1.0% RDI per calorie = 10/10)
+    final densityScore = (rdiPerCalorie * 10).clamp(0.0, 10.0);
+    
+    return Column(
+      children: [
+        SizedBox(
+          width: 60,
+          height: 60,
+          child: Stack(
+            children: [
+              Container(
+                width: 60,
+                height: 60,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: Colors.grey[200],
+                ),
+              ),
+              Container(
+                width: 60,
+                height: 60,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: color.withValues(alpha: 0.2),
+                ),
+                child: Center(
+                  child: Text(
+                    '${densityScore.toStringAsFixed(1)}',
+                    style: TextStyle(
+                      fontSize: 11,
+                      fontWeight: FontWeight.bold,
+                      color: color,
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+        const SizedBox(height: 8),
+        Text(
+          AppLocalizations.of(context)!.nutrientDensity,
+          style: const TextStyle(
+            fontSize: 11,
+            fontWeight: FontWeight.bold,
+            color: Color(0xFF240041),
+          ),
+        ),
+        Text(
+          '${densityScore.toStringAsFixed(1)}/10',
+          style: const TextStyle(
+            fontSize: 10,
+            color: Color(0xFF240041),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildFiberCircle(double fiberValue, Color color) {
+    // Calculate percentage of daily recommended fiber (25g for adults)
+    final dailyRecommendedFiber = 25.0;
+    final percentage = (fiberValue / dailyRecommendedFiber * 100).clamp(0.0, 100.0);
+    
+    return Column(
+      children: [
+        SizedBox(
+          width: 60,
+          height: 60,
+          child: Stack(
+            children: [
+              Container(
+                width: 60,
+                height: 60,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: Colors.grey[200],
+                ),
+              ),
+              Container(
+                width: 60,
+                height: 60,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: color.withValues(alpha: 0.2),
+                ),
+                child: Center(
+                  child: Text(
+                    '${fiberValue.toStringAsFixed(1)}g',
+                    style: TextStyle(
+                      fontSize: 12,
+                      fontWeight: FontWeight.bold,
+                      color: color,
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+        const SizedBox(height: 8),
+        Text(
+          AppLocalizations.of(context)!.fiber,
+          style: const TextStyle(
+            fontSize: 12,
+            fontWeight: FontWeight.bold,
+            color: Color(0xFF240041),
+          ),
+        ),
+        Text(
+          '${percentage.toInt()}% DRI',
+          style: const TextStyle(
+            fontSize: 10,
+            color: Color(0xFF240041),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildKeyVitaminsCircle(NutritionInfo nutrition, Color color) {
+    String topVitaminName = 'N/A';
+    double topVitaminPercentage = 0.0;
+    
+    if (nutrition.detailedInfo != null) {
+      final detailed = nutrition.detailedInfo!;
+      
+      // Calculate RDI percentages for each vitamin
+      final vitaminPercentages = {
+        'Vit C': (detailed.vitaminC / _driValues['vitaminC']!) * 100,
+        'Vit A': (detailed.vitaminA / _driValues['vitaminA']!) * 100,
+        'Vit K': (detailed.vitaminK / _driValues['vitaminK']!) * 100,
+        'Vit E': (detailed.vitaminE / _driValues['vitaminE']!) * 100,
+        'Folate': (detailed.folate / _driValues['folate']!) * 100,
+      };
+      
+      // Find the vitamin with highest RDI percentage
+      vitaminPercentages.forEach((name, percentage) {
+        if (percentage > topVitaminPercentage) {
+          topVitaminPercentage = percentage;
+          topVitaminName = name;
+        }
+      });
+    }
+    
+    return Column(
+      children: [
+        SizedBox(
+          width: 60,
+          height: 60,
+          child: Stack(
+            children: [
+              Container(
+                width: 60,
+                height: 60,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: Colors.grey[200],
+                ),
+              ),
+              Container(
+                width: 60,
+                height: 60,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: color.withValues(alpha: 0.2),
+                ),
+                child: Center(
+                  child: Text(
+                    topVitaminPercentage > 0 ? '${topVitaminPercentage.toStringAsFixed(1)}%' : 'N/A',
+                    style: TextStyle(
+                      fontSize: 9,
+                      fontWeight: FontWeight.bold,
+                      color: color,
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+        const SizedBox(height: 8),
+        Text(
+          topVitaminName,
+          style: const TextStyle(
+            fontSize: 12,
+            fontWeight: FontWeight.bold,
+            color: Color(0xFF240041),
+          ),
+        ),
+        Text(
+          topVitaminPercentage > 0 ? '${topVitaminPercentage.toStringAsFixed(1)}% DRI' : '0% DRI',
+          style: const TextStyle(
+            fontSize: 10,
+            color: Color(0xFF240041),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildDetailedNutritionView(ProduceItem item) {
+    final detailed = item.nutritionInfo.detailedInfo!;
+    
+    return SingleChildScrollView(
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+            Text(
+              AppLocalizations.of(context)!.vitamins,
+              style: const TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+                color: Color(0xFF240041),
+              ),
+            ),
+            const SizedBox(height: 10),
+            _buildNutrientHeader(),
+            _buildNutrientRowWithDRI(AppLocalizations.of(context)!.vitaminA, detailed.vitaminA, AppLocalizations.of(context)!.mcg, _driValues['vitaminA']!),
+            _buildNutrientRowWithDRI(AppLocalizations.of(context)!.vitaminC, detailed.vitaminC, AppLocalizations.of(context)!.mg, _driValues['vitaminC']!),
+            _buildNutrientRowWithDRI(AppLocalizations.of(context)!.vitaminK, detailed.vitaminK, AppLocalizations.of(context)!.mcg, _driValues['vitaminK']!),
+            _buildNutrientRowWithDRI(AppLocalizations.of(context)!.vitaminE, detailed.vitaminE, AppLocalizations.of(context)!.mg, _driValues['vitaminE']!),
+            _buildNutrientRowWithDRI(AppLocalizations.of(context)!.folate, detailed.folate, AppLocalizations.of(context)!.mcg, _driValues['folate']!),
+            
+            const SizedBox(height: 20),
+            Text(
+              AppLocalizations.of(context)!.minerals,
+              style: const TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+                color: Color(0xFF240041),
+              ),
+            ),
+            const SizedBox(height: 10),
+            _buildNutrientHeader(),
+            _buildNutrientRowWithDRI(AppLocalizations.of(context)!.potassium, detailed.potassium, AppLocalizations.of(context)!.mg, _driValues['potassium']!),
+            _buildNutrientRowWithDRI(AppLocalizations.of(context)!.calcium, detailed.calcium, AppLocalizations.of(context)!.mg, _driValues['calcium']!),
+            _buildNutrientRowWithDRI(AppLocalizations.of(context)!.magnesium, detailed.magnesium, AppLocalizations.of(context)!.mg, _driValues['magnesium']!),
+            _buildNutrientRowWithDRI(AppLocalizations.of(context)!.phosphorus, detailed.phosphorus, AppLocalizations.of(context)!.mg, _driValues['phosphorus']!),
+            _buildNutrientRowWithDRI(AppLocalizations.of(context)!.iron, detailed.iron, AppLocalizations.of(context)!.mg, _driValues['iron']!),
+            
+            const SizedBox(height: 20),
+            Text(
+              'Macronutrients',
+              style: const TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+                color: Color(0xFF240041),
+              ),
+            ),
+            const SizedBox(height: 10),
+            _buildMacroNutrientHeader(),
+            _buildMacroNutrientRow('Carbs', item.nutritionInfo.carbs, 'g'),
+            _buildMacroNutrientRow('Fats', item.nutritionInfo.fats, 'g'),
+            _buildMacroNutrientRow('Proteins', item.nutritionInfo.proteins, 'g'),
+            if (item.nutritionInfo.fiber != null)
+              _buildMacroNutrientRow('Fiber', item.nutritionInfo.fiber!, 'g'),
+            
+        ],
+      ),
+    );
+  }
+
+  Widget _buildNutrientRow(String name, double value, String unit) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 4.0),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text(
+            name,
+            style: const TextStyle(
+              fontSize: 14,
+              color: Color(0xFF240041),
+            ),
+          ),
+          Text(
+            '${value.toStringAsFixed(value >= 1 ? 1 : 2)}$unit',
+            style: const TextStyle(
+              fontSize: 14,
+              fontWeight: FontWeight.bold,
+              color: Color(0xFF240041),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildNutrientHeader() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 8.0),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Expanded(
+            flex: 2,
+            child: Text(
+              AppLocalizations.of(context)!.nutrient,
+              textAlign: TextAlign.left,
+              style: const TextStyle(
+                fontSize: 12,
+                fontWeight: FontWeight.bold,
+                color: Color(0xFF240041),
+              ),
+            ),
+          ),
+          Expanded(
+            flex: 2,
+            child: Text(
+              AppLocalizations.of(context)!.amount,
+              textAlign: TextAlign.right,
+              style: const TextStyle(
+                fontSize: 12,
+                fontWeight: FontWeight.bold,
+                color: Color(0xFF240041),
+              ),
+            ),
+          ),
+          Expanded(
+            flex: 1,
+            child: Text(
+              '%${AppLocalizations.of(context)!.dri}',
+              textAlign: TextAlign.right,
+              style: const TextStyle(
+                fontSize: 12,
+                fontWeight: FontWeight.bold,
+                color: Color(0xFF240041),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildNutrientRowWithDRI(String name, double value, String unit, double driValue) {
+    final percentage = driValue > 0 ? (value / driValue * 100) : 0.0;
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 4.0),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Expanded(
+            flex: 3,
+            child: Text(
+              name,
+              style: const TextStyle(
+                fontSize: 14,
+                color: Color(0xFF240041),
+              ),
+            ),
+          ),
+          Expanded(
+            flex: 2,
+            child: Text(
+              '${value.toStringAsFixed(value >= 1 ? 1 : 2)}$unit',
+              textAlign: TextAlign.right,
+              style: const TextStyle(
+                fontSize: 14,
+                fontWeight: FontWeight.bold,
+                color: Color(0xFF240041),
+              ),
+            ),
+          ),
+          Expanded(
+            flex: 1,
+            child: Text(
+              '${percentage.toStringAsFixed(1)}%',
+              textAlign: TextAlign.right,
+              style: TextStyle(
+                fontSize: 12,
+                fontWeight: FontWeight.w600,
+                color: percentage >= 10 ? const Color(0xFF74ce9e) : const Color(0xFF666666),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildMacroNutrientHeader() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 8.0),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          const Expanded(
+            flex: 2,
+            child: Text(
+              'Nutrient',
+              textAlign: TextAlign.left,
+              style: TextStyle(
+                fontSize: 12,
+                fontWeight: FontWeight.bold,
+                color: Color(0xFF240041),
+              ),
+            ),
+          ),
+          const Expanded(
+            flex: 2,
+            child: Text(
+              'Amount',
+              textAlign: TextAlign.right,
+              style: TextStyle(
+                fontSize: 12,
+                fontWeight: FontWeight.bold,
+                color: Color(0xFF240041),
+              ),
+            ),
+          ),
+          Expanded(
+            flex: 1,
+            child: Text(
+              '%${AppLocalizations.of(context)!.dri}',
+              textAlign: TextAlign.right,
+              style: const TextStyle(
+                fontSize: 12,
+                fontWeight: FontWeight.bold,
+                color: Color(0xFF240041),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildMacroNutrientRow(String name, double value, String unit) {
+    final driKey = name.toLowerCase();
+    final driValue = _driValues[driKey] ?? 1.0;
+    final percentage = driValue > 0 ? (value / driValue * 100) : 0.0;
+    
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 4.0),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Expanded(
+            flex: 2,
+            child: Text(
+              name,
+              style: const TextStyle(
+                fontSize: 14,
+                color: Color(0xFF240041),
+              ),
+            ),
+          ),
+          Expanded(
+            flex: 2,
+            child: Text(
+              '${value.toStringAsFixed(value >= 1 ? 1 : 2)}$unit',
+              textAlign: TextAlign.right,
+              style: const TextStyle(
+                fontSize: 14,
+                fontWeight: FontWeight.bold,
+                color: Color(0xFF240041),
+              ),
+            ),
+          ),
+          Expanded(
+            flex: 1,
+            child: Text(
+              '${percentage.toStringAsFixed(1)}%',
+              textAlign: TextAlign.right,
+              style: TextStyle(
+                fontSize: 12,
+                fontWeight: FontWeight.w600,
+                color: percentage >= 10 ? const Color(0xFF74ce9e) : const Color(0xFF666666),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  // DRI values for adults (average of male/female recommendations)
+  Map<String, double> get _driValues => {
+    'vitaminA': 750.0, // mcg
+    'vitaminC': 80.0, // mg
+    'vitaminK': 70.0, // mcg
+    'vitaminE': 12.0, // mg
+    'folate': 400.0, // mcg
+    'potassium': 3500.0, // mg
+    'calcium': 1000.0, // mg
+    'magnesium': 350.0, // mg
+    'phosphorus': 700.0, // mg
+    'iron': 14.0, // mg
+    'carbs': 250.0, // g (same as used in circles)
+    'fats': 65.0, // g (20-35% of 2000 kcal = ~44-78g, using middle value)
+    'proteins': 50.0, // g (0.8g per kg for 70kg adult = 56g, rounded to 50g)
+    'fiber': 25.0, // g (same as used in circles)
+  };
 
   Widget _buildViewMenu() {
     return Positioned(
