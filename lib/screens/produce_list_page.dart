@@ -368,8 +368,7 @@ class ProduceListPageState extends State<ProduceListPage> with SingleTickerProvi
       case ViewType.icon:
         return _buildGridView(items);
       case ViewType.card:
-      default:
-        return _buildCardView(items);
+      return _buildCardView(items);
     }
   }
 
@@ -691,8 +690,7 @@ class ProduceListPageState extends State<ProduceListPage> with SingleTickerProvi
       case SortType.favorite:
         return List.from(items)..sort((a, b) => _compareFavoritePriority(a, b));
       case SortType.none:
-      default:
-        return items;
+      return items;
     }
   }
 
