@@ -323,44 +323,6 @@ class ProduceListPageState extends State<ProduceListPage> with SingleTickerProvi
     );
   }
 
-  Widget _buildViewSelectionButtons() {
-    return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          IconButton(
-            icon: const Icon(Icons.list),
-            onPressed: () {
-              setState(() {
-                _viewType = ViewType.list;
-              });
-            },
-            color: _viewType == ViewType.list ? Colors.blue : Colors.grey,
-          ),
-          IconButton(
-            icon: const Icon(Icons.grid_view),
-            onPressed: () {
-              setState(() {
-                _viewType = ViewType.icon;
-              });
-            },
-            color: _viewType == ViewType.icon ? Colors.blue : Colors.grey,
-          ),
-          IconButton(
-            icon: const Icon(Icons.view_agenda),
-            onPressed: () {
-              setState(() {
-                _viewType = ViewType.card;
-              });
-            },
-            color: _viewType == ViewType.card ? Colors.blue : Colors.grey,
-          ),
-        ],
-      ),
-    );
-  }
-
   Widget _buildView(List<ProduceItem> items) {
     switch (_viewType) {
       case ViewType.list:
