@@ -1412,8 +1412,8 @@ class ProduceListPageState extends State<ProduceListPage> with TickerProviderSta
     // Calculate RDI per calorie
     final rdiPerCalorie = nutrition.calories > 0 ? totalRDI / nutrition.calories : 0.0;
     
-    // Convert to 1-10 scale (1.0% RDI per calorie = 5/10, 2.0% = 10/10)
-    final densityScore = (rdiPerCalorie * 5).clamp(0.0, 10.0);
+    // Convert to 1-10 scale (stricter: 1.0% RDI per calorie = 2.5/10, 4.0% = 10/10)
+    final densityScore = (rdiPerCalorie * 2.5).clamp(0.0, 10.0);
     
     return Column(
       children: [
