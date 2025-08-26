@@ -43,8 +43,8 @@ class ProduceListPageState extends State<ProduceListPage> with TickerProviderSta
   SortType _currentSort = SortType.none;
   Set<String> _favorites = {};
   AnimationController? _animationController;
-  Map<String, AnimationController> _flipControllers = {};
-  Map<String, bool> _showDetailedNutrition = {};
+  final Map<String, AnimationController> _flipControllers = {};
+  final Map<String, bool> _showDetailedNutrition = {};
 
   @override
   void initState() {
@@ -100,10 +100,16 @@ class ProduceListPageState extends State<ProduceListPage> with TickerProviderSta
           polyunsaturatedFat: 0.0,
           sugar: 9.9,
           starch: 0.0,
+          water: 86.9,
+          betaCarotene: 22.0,
           vitaminA: 22.0,
           vitaminC: 4.8,
           vitaminK: 0.0,
           vitaminE: 0.3,
+          thiamin: 0.02,
+          riboflavin: 0.03,
+          niacin: 0.1,
+          vitaminB6: 0.04,
           folate: 2.9,
           potassium: 62.0,
           calcium: 3.0,
@@ -131,12 +137,17 @@ class ProduceListPageState extends State<ProduceListPage> with TickerProviderSta
           vitaminC: 60.8,
           vitaminK: 0.0,
           vitaminE: 0.6,
+          thiamin: 0.02,
+          riboflavin: 0.02,
+          niacin: 0.4,
+          vitaminB6: 0.05,
           folate: 85.7,
           potassium: 130.0,
           calcium: 18.0,
           magnesium: 11.0,
           phosphorus: 20.0,
           iron: 0.34,
+          water: 91.0,
         )
       )),
     ProduceItem(AppLocalizations.of(context)!.blueberries, 'assets/produce/blueberry.jpeg', {
@@ -154,10 +165,16 @@ class ProduceListPageState extends State<ProduceListPage> with TickerProviderSta
           polyunsaturatedFat: 0.0,
           sugar: 6.4,
           starch: 0.0,
+          water: 84.2,
+          betaCarotene: 40.0,
           vitaminA: 8.5,
           vitaminC: 8.1,
           vitaminK: 0.0,
           vitaminE: 0.1,
+          thiamin: 0.04,
+          riboflavin: 0.04,
+          niacin: 0.4,
+          vitaminB6: 0.05,
           folate: 10.2,
           potassium: 86.0,
           calcium: 23.0,
@@ -185,12 +202,17 @@ class ProduceListPageState extends State<ProduceListPage> with TickerProviderSta
           vitaminC: 27.0,
           vitaminK: 11.0,
           vitaminE: 1.4,
+          thiamin: 0.03,
+          riboflavin: 0.04,
+          niacin: 0.6,
+          vitaminB6: 0.06,
           folate: 46.0,
           potassium: 150.0,
           calcium: 27.0,
           magnesium: 25.0,
           phosphorus: 28.0,
-          iron: 1.1,
+          iron: 1.1, 
+          water: 1.0,
         )
       )),
     ProduceItem(AppLocalizations.of(context)!.mushrooms, 'assets/produce/mushroom.jpeg', {
@@ -206,16 +228,23 @@ class ProduceListPageState extends State<ProduceListPage> with TickerProviderSta
           saturatedFat: 0.0,
           monounsaturatedFat: 0.0,
           polyunsaturatedFat: 0.1,
+          sugar: 1.5,
+          starch: 0.0,
           vitaminA: 0.0,
           vitaminC: 5.0,
           vitaminK: 1.0,
           vitaminE: 0.0,
+          thiamin: 0.08,
+          riboflavin: 0.4,
+          niacin: 3.6,
+          vitaminB6: 0.1,
           folate: 31.0,
           potassium: 389.0,
           calcium: 6.0,
           magnesium: 12.0,
           phosphorus: 112.0,
           iron: 0.33,
+          water: 92.0,
         )
       )),
     ProduceItem(AppLocalizations.of(context)!.grapes, 'assets/produce/grape.jpeg', {
@@ -243,6 +272,7 @@ class ProduceListPageState extends State<ProduceListPage> with TickerProviderSta
           magnesium: 7.0,
           phosphorus: 13.0,
           iron: 0.3,
+          water: 81.0,
         )
       )),
     ProduceItem(AppLocalizations.of(context)!.pears, 'assets/produce/pear.jpeg', {
@@ -270,6 +300,7 @@ class ProduceListPageState extends State<ProduceListPage> with TickerProviderSta
           magnesium: 7.0,
           phosphorus: 11.0,
           iron: 0.18,
+          water: 84.0,
         )
       )),
     ProduceItem(AppLocalizations.of(context)!.plums, 'assets/produce/plum.jpeg', {
@@ -297,6 +328,7 @@ class ProduceListPageState extends State<ProduceListPage> with TickerProviderSta
           magnesium: 10.0,
           phosphorus: 14.0,
           iron: 0.15,
+          water: 87.0,
         )
       )),
     ProduceItem(AppLocalizations.of(context)!.cherries, 'assets/produce/cherry.jpeg', {
@@ -312,6 +344,8 @@ class ProduceListPageState extends State<ProduceListPage> with TickerProviderSta
           saturatedFat: 0.0,
           monounsaturatedFat: 0.0,
           polyunsaturatedFat: 0.0,
+          sugar: 12.8,
+          starch: 0.0,
           vitaminA: 6.0,
           vitaminC: 12.0,
           vitaminK: 3.0,
@@ -322,6 +356,7 @@ class ProduceListPageState extends State<ProduceListPage> with TickerProviderSta
           magnesium: 8.0,
           phosphorus: 22.0,
           iron: 0.3,
+          water: 82.0,
         )
       )),
     ProduceItem(AppLocalizations.of(context)!.beets, 'assets/produce/beet.jpeg', {
@@ -349,6 +384,7 @@ class ProduceListPageState extends State<ProduceListPage> with TickerProviderSta
           magnesium: 14.0,
           phosphorus: 28.0,
           iron: 0.31,
+          water: 88.0,
         )
       )),
     ProduceItem(AppLocalizations.of(context)!.potatoes, 'assets/produce/potato.jpeg', {
@@ -370,12 +406,17 @@ class ProduceListPageState extends State<ProduceListPage> with TickerProviderSta
           vitaminC: 11.0,
           vitaminK: 2.0,
           vitaminE: 0.0,
+          thiamin: 0.08,
+          riboflavin: 0.03,
+          niacin: 1.1,
+          vitaminB6: 0.3,
           folate: 19.0,
           potassium: 468.0,
           calcium: 9.0,
           magnesium: 24.0,
           phosphorus: 31.0,
           iron: 0.48,
+          water: 79.0,
         )
       )),
     ProduceItem(AppLocalizations.of(context)!.carrots, 'assets/produce/carrot.jpeg', {
@@ -397,12 +438,17 @@ class ProduceListPageState extends State<ProduceListPage> with TickerProviderSta
           vitaminC: 5.0,
           vitaminK: 8.0,
           vitaminE: 1.0,
+          thiamin: 0.07,
+          riboflavin: 0.06,
+          niacin: 1.0,
+          vitaminB6: 0.1,
           folate: 22.0,
           potassium: 210.0,
           calcium: 26.0,
           magnesium: 8.0,
           phosphorus: 23.0,
           iron: 0.19,
+          water: 88.0,
         )
       )),
     ProduceItem(AppLocalizations.of(context)!.broccoli, 'assets/produce/broccoli.jpeg', {
@@ -418,16 +464,23 @@ class ProduceListPageState extends State<ProduceListPage> with TickerProviderSta
           saturatedFat: 0.1,
           monounsaturatedFat: 0.0,
           polyunsaturatedFat: 0.1,
+          sugar: 1.4,
+          starch: 0.0,
           vitaminA: 39.0,
           vitaminC: 83.0,
           vitaminK: 140.0,
           vitaminE: 0.4,
+          thiamin: 0.1,
+          riboflavin: 0.1,
+          niacin: 0.6,
+          vitaminB6: 0.2,
           folate: 175.0,
           potassium: 332.0,
           calcium: 62.0,
           magnesium: 23.0,
           phosphorus: 81.0,
           iron: 0.66,
+          water: 89.0,
         )
       )),
     ProduceItem(AppLocalizations.of(context)!.cauliflower, 'assets/produce/cauliflower.jpeg', {
@@ -443,6 +496,8 @@ class ProduceListPageState extends State<ProduceListPage> with TickerProviderSta
           saturatedFat: 0.0,
           monounsaturatedFat: 0.0,
           polyunsaturatedFat: 0.1,
+          sugar: 2.0,
+          starch: 0.0,
           vitaminA: 0.0,
           vitaminC: 79.0,
           vitaminK: 27.0,
@@ -453,6 +508,7 @@ class ProduceListPageState extends State<ProduceListPage> with TickerProviderSta
           magnesium: 11.0,
           phosphorus: 43.0,
           iron: 0.34,
+          water: 92.0,
         )
       )),
     ProduceItem(AppLocalizations.of(context)!.peas, 'assets/produce/pea.jpeg', {
@@ -468,16 +524,23 @@ class ProduceListPageState extends State<ProduceListPage> with TickerProviderSta
           saturatedFat: 0.1,
           monounsaturatedFat: 0.0,
           polyunsaturatedFat: 0.2,
+          sugar: 4.5,
+          starch: 4.0,
           vitaminA: 46.0,
           vitaminC: 40.0,
           vitaminK: 25.0,
           vitaminE: 0.0,
+          thiamin: 0.3,
+          riboflavin: 0.1,
+          niacin: 2.1,
+          vitaminB6: 0.2,
           folate: 65.0,
           potassium: 370.0,
           calcium: 25.0,
           magnesium: 40.0,
           phosphorus: 130.0,
           iron: 2.0,
+          water: 79.0,
         )
       )),
     ProduceItem(AppLocalizations.of(context)!.cabbage, 'assets/produce/cabbage.jpeg', {
@@ -493,6 +556,8 @@ class ProduceListPageState extends State<ProduceListPage> with TickerProviderSta
           saturatedFat: 0.0,
           monounsaturatedFat: 0.0,
           polyunsaturatedFat: 0.1,
+          sugar: 3.2,
+          starch: 0.0,
           vitaminA: 1.0,
           vitaminC: 46.0,
           vitaminK: 44.0,
@@ -503,6 +568,7 @@ class ProduceListPageState extends State<ProduceListPage> with TickerProviderSta
           magnesium: 11.0,
           phosphorus: 24.0,
           iron: 0.21,
+          water: 92.0,
         )
       )),
     ProduceItem(AppLocalizations.of(context)!.kale, 'assets/produce/kale.jpeg', {
@@ -518,16 +584,23 @@ class ProduceListPageState extends State<ProduceListPage> with TickerProviderSta
           saturatedFat: 0.1,
           monounsaturatedFat: 0.0,
           polyunsaturatedFat: 0.5,
+          sugar: 2.3,
+          starch: 0.0,
           vitaminA: 446.0,
           vitaminC: 120.0,
           vitaminK: 400.0,
           vitaminE: 5.4,
+          thiamin: 0.1,
+          riboflavin: 0.1,
+          niacin: 1.0,
+          vitaminB6: 0.3,
           folate: 30.0,
           potassium: 530.0,
           calcium: 157.0,
           magnesium: 35.0,
           phosphorus: 56.0,
           iron: 1.7,
+          water: 84.0,
         )
       )),
     ProduceItem(AppLocalizations.of(context)!.brusselsSprouts, 'assets/produce/brusselsprout.jpeg', {
@@ -543,50 +616,249 @@ class ProduceListPageState extends State<ProduceListPage> with TickerProviderSta
           saturatedFat: 0.1,
           monounsaturatedFat: 0.0,
           polyunsaturatedFat: 0.2,
+          sugar: 2.2,
+          starch: 0.0,
           vitaminA: 36.0,
           vitaminC: 85.0,
           vitaminK: 140.0,
           vitaminE: 0.0,
+          thiamin: 0.1,
+          riboflavin: 0.1,
+          niacin: 0.7,
+          vitaminB6: 0.2,
           folate: 159.0,
           potassium: 390.0,
           calcium: 42.0,
           magnesium: 23.0,
           phosphorus: 69.0,
           iron: 1.4,
+          water: 86.0,
         )
       )),
     ProduceItem(AppLocalizations.of(context)!.papaya, 'assets/produce/papaya.jpeg', {
       'sweden': [1, 2, 3, 4, 5, 6, 11, 12],
       'andalucia': [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
-    }, _getDefaultNutrition()),
+    }, NutritionInfo(
+        carbs: 7.2, 
+        fats: 0.1, 
+        proteins: 0.6, 
+        fiber: 2.6,
+        calories: 43,
+        detailedInfo: DetailedNutritionInfo(
+          saturatedFat: 0.0,
+          monounsaturatedFat: 0.0,
+          polyunsaturatedFat: 0.0,
+          sugar: 7.2,
+          starch: 0.0,
+          water: 89.0,
+          vitaminA: 950.0,
+          vitaminC: 61.0,
+          vitaminK: 2.0,
+          vitaminE: 0.3,
+          folate: 37.0,
+          potassium: 182.0,
+          calcium: 20.0,
+          magnesium: 21.0,
+          phosphorus: 10.0,
+          iron: 0.25,
+        )
+      )),
     ProduceItem(AppLocalizations.of(context)!.pineapple, 'assets/produce/pineapple.jpeg', {
       'sweden': [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
       'andalucia': [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
-    }, _getDefaultNutrition()),
+    }, NutritionInfo(
+        carbs: 13.1, 
+        fats: 0.1, 
+        proteins: 0.5, 
+        fiber: 1.4,
+        calories: 50,
+        detailedInfo: DetailedNutritionInfo(
+          saturatedFat: 0.0,
+          monounsaturatedFat: 0.0,
+          polyunsaturatedFat: 0.0,
+          sugar: 13.1,
+          starch: 0.0,
+          water: 86.0,
+          vitaminA: 58.0,
+          vitaminC: 47.8,
+          vitaminK: 0.7,
+          vitaminE: 0.02,
+          folate: 18.0,
+          potassium: 109.0,
+          calcium: 13.0,
+          magnesium: 12.0,
+          phosphorus: 8.0,
+          iron: 0.29,
+        )
+      )),
     ProduceItem(AppLocalizations.of(context)!.mango, 'assets/produce/mango.jpeg', {
       'sweden': [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
       'andalucia': [8, 9, 10]
-    }, _getDefaultNutrition()),
+    }, NutritionInfo(
+        carbs: 15.0, 
+        fats: 0.4, 
+        proteins: 0.8, 
+        fiber: 1.6,
+        calories: 60,
+        detailedInfo: DetailedNutritionInfo(
+          saturatedFat: 0.1,
+          monounsaturatedFat: 0.1,
+          polyunsaturatedFat: 0.1,
+          sugar: 13.7,
+          starch: 0.0,
+          water: 83.5,
+          vitaminA: 1082.0,
+          vitaminC: 36.4,
+          vitaminK: 4.2,
+          vitaminE: 0.9,
+          folate: 43.0,
+          potassium: 168.0,
+          calcium: 11.0,
+          magnesium: 10.0,
+          phosphorus: 14.0,
+          iron: 0.16,
+        )
+      )),
     ProduceItem(AppLocalizations.of(context)!.passionfruit, 'assets/produce/passionfruit.jpeg', {
       'sweden': [1, 2, 3, 4, 7, 8, 9, 10, 12],
       'andalucia': [8, 9, 10]
-    }, _getDefaultNutrition()),
+    }, NutritionInfo(
+        carbs: 23.4, 
+        fats: 0.7, 
+        proteins: 2.2, 
+        fiber: 10.4,
+        calories: 97,
+        detailedInfo: DetailedNutritionInfo(
+          saturatedFat: 0.1,
+          monounsaturatedFat: 0.1,
+          polyunsaturatedFat: 0.4,
+          sugar: 11.2,
+          starch: 0.0,
+          water: 72.9,
+          vitaminA: 1274.0,
+          vitaminC: 30.0,
+          vitaminK: 0.7,
+          vitaminE: 0.02,
+          folate: 14.0,
+          potassium: 348.0,
+          calcium: 12.0,
+          magnesium: 29.0,
+          phosphorus: 68.0,
+          iron: 1.6,
+        )
+      )),
     ProduceItem(AppLocalizations.of(context)!.kiwi, 'assets/produce/kiwi.jpeg', {
       'sweden': [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
       'andalucia': [11, 12, 1, 2, 3, 4]
-    }, _getDefaultNutrition()),
+    }, NutritionInfo(
+        carbs: 14.7, 
+        fats: 0.5, 
+        proteins: 1.1, 
+        fiber: 3.0,
+        calories: 61,
+        detailedInfo: DetailedNutritionInfo(
+          saturatedFat: 0.1,
+          monounsaturatedFat: 0.0,
+          polyunsaturatedFat: 0.3,
+          sugar: 9.0,
+          starch: 0.0,
+          water: 83.1,
+          vitaminA: 87.0,
+          vitaminC: 92.7,
+          vitaminK: 40.3,
+          vitaminE: 1.5,
+          folate: 25.0,
+          potassium: 312.0,
+          calcium: 34.0,
+          magnesium: 17.0,
+          phosphorus: 34.0,
+          iron: 0.31,
+        )
+      )),
     ProduceItem(AppLocalizations.of(context)!.lychee, 'assets/produce/lychee.jpeg', {
       'sweden': [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
       'andalucia': [7, 8]
-    }, _getDefaultNutrition()),
+    }, NutritionInfo(
+        carbs: 16.5, 
+        fats: 0.4, 
+        proteins: 0.8, 
+        fiber: 1.3,
+        calories: 66,
+        detailedInfo: DetailedNutritionInfo(
+          saturatedFat: 0.1,
+          monounsaturatedFat: 0.1,
+          polyunsaturatedFat: 0.1,
+          sugar: 15.2,
+          starch: 0.0,
+          water: 81.8,
+          vitaminA: 0.0,
+          vitaminC: 71.5,
+          vitaminK: 0.4,
+          vitaminE: 0.07,
+          folate: 14.0,
+          potassium: 171.0,
+          calcium: 5.0,
+          magnesium: 10.0,
+          phosphorus: 31.0,
+          iron: 0.31,
+        )
+      )),
     ProduceItem(AppLocalizations.of(context)!.pomegranate, 'assets/produce/pomegranate.jpeg', {
       'sweden': [1, 2, 3, 9, 10, 11, 12],
       'andalucia': [9, 10, 11, 12]
-    }, _getDefaultNutrition()),
+    }, NutritionInfo(
+        carbs: 18.7, 
+        fats: 1.2, 
+        proteins: 1.7, 
+        fiber: 4.0,
+        calories: 83,
+        detailedInfo: DetailedNutritionInfo(
+          saturatedFat: 0.1,
+          monounsaturatedFat: 0.1,
+          polyunsaturatedFat: 0.1,
+          sugar: 13.7,
+          starch: 0.0,
+          water: 77.9,
+          vitaminA: 0.0,
+          vitaminC: 10.2,
+          vitaminK: 16.4,
+          vitaminE: 0.6,
+          folate: 38.0,
+          potassium: 236.0,
+          calcium: 10.0,
+          magnesium: 12.0,
+          phosphorus: 36.0,
+          iron: 0.3,
+        )
+      )),
     ProduceItem(AppLocalizations.of(context)!.coconut, 'assets/produce/coconut.jpeg', {
       'sweden': [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
       'andalucia': [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
-    }, _getDefaultNutrition()),
+    }, NutritionInfo(
+        carbs: 15.2, 
+        fats: 33.5, 
+        proteins: 3.3, 
+        fiber: 9.0,
+        calories: 354,
+        detailedInfo: DetailedNutritionInfo(
+          saturatedFat: 29.7,
+          monounsaturatedFat: 1.4,
+          polyunsaturatedFat: 0.4,
+          sugar: 6.2,
+          starch: 0.0,
+          water: 47.0,
+          vitaminA: 0.0,
+          vitaminC: 3.3,
+          vitaminK: 0.2,
+          vitaminE: 0.24,
+          folate: 26.0,
+          potassium: 356.0,
+          calcium: 14.0,
+          magnesium: 32.0,
+          phosphorus: 113.0,
+          iron: 2.43,
+        )
+      )),
     ProduceItem(AppLocalizations.of(context)!.avocado, 'assets/produce/avocado.jpeg', {
       'sweden': [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
       'andalucia': [10, 11, 12, 1, 2, 3, 4, 5]
@@ -606,12 +878,17 @@ class ProduceListPageState extends State<ProduceListPage> with TickerProviderSta
           vitaminC: 3.3,
           vitaminK: 0.0,
           vitaminE: 3.4,
+          thiamin: 0.1,
+          riboflavin: 0.2,
+          niacin: 1.7,
+          vitaminB6: 0.3,
           folate: 116.0,
           potassium: 600.0,
           calcium: 14.0,
           magnesium: 32.0,
           phosphorus: 67.0,
           iron: 0.3,
+          water: 73.0,
         )
       )),
     ProduceItem(AppLocalizations.of(context)!.oranges, 'assets/produce/orange.jpeg', {
@@ -639,6 +916,7 @@ class ProduceListPageState extends State<ProduceListPage> with TickerProviderSta
           magnesium: 8.0,
           phosphorus: 16.0,
           iron: 0.1,
+          water: 87.0,
         )
       )),
     ProduceItem(AppLocalizations.of(context)!.lemons, 'assets/produce/lemon.jpeg', {
@@ -666,20 +944,99 @@ class ProduceListPageState extends State<ProduceListPage> with TickerProviderSta
           magnesium: 11.0,
           phosphorus: 15.0,
           iron: 0.2,
+          water: 89.0,
         )
       )),
     ProduceItem(AppLocalizations.of(context)!.olives, 'assets/produce/olive.jpeg', {
       'sweden': [], 
       'andalucia': [10, 11, 12, 1, 2, 3]
-    }, _getDefaultNutrition()),
+    }, NutritionInfo(
+        carbs: 3.8, 
+        fats: 15.3, 
+        proteins: 1.0, 
+        fiber: 3.3,
+        calories: 145,
+        detailedInfo: DetailedNutritionInfo(
+          saturatedFat: 2.0,
+          monounsaturatedFat: 11.3,
+          polyunsaturatedFat: 1.3,
+          sugar: 0.5,
+          starch: 0.0,
+          water: 75.3,
+          vitaminA: 20.0,
+          vitaminC: 0.9,
+          vitaminK: 1.4,
+          vitaminE: 3.8,
+          folate: 3.0,
+          potassium: 42.0,
+          calcium: 52.0,
+          magnesium: 11.0,
+          phosphorus: 4.0,
+          iron: 0.49,
+          sodium: 1556.0,
+        )
+      )),
     ProduceItem(AppLocalizations.of(context)!.almonds, 'assets/produce/almond.jpeg', {
       'sweden': [], 
       'andalucia': [8, 9, 10]
-    }, _getDefaultNutrition()),
+    }, NutritionInfo(
+        carbs: 21.6, 
+        fats: 49.9, 
+        proteins: 21.2, 
+        fiber: 12.5,
+        calories: 579,
+        detailedInfo: DetailedNutritionInfo(
+          saturatedFat: 3.8,
+          monounsaturatedFat: 31.6,
+          polyunsaturatedFat: 12.3,
+          sugar: 4.4,
+          starch: 0.7,
+          water: 4.4,
+          vitaminA: 0.0,
+          vitaminC: 0.0,
+          vitaminK: 0.0,
+          vitaminE: 25.6,
+          thiamin: 0.2,
+          riboflavin: 1.1,
+          niacin: 3.6,
+          vitaminB6: 0.1,
+          folate: 44.0,
+          potassium: 733.0,
+          calcium: 269.0,
+          magnesium: 270.0,
+          phosphorus: 481.0,
+          iron: 3.7,
+          zinc: 3.1,
+        )
+      )),
     ProduceItem(AppLocalizations.of(context)!.figs, 'assets/produce/fig.jpeg', {
       'sweden': [], 
       'andalucia': [7, 8, 9]
-    }, _getDefaultNutrition()),
+    }, NutritionInfo(
+        carbs: 19.2, 
+        fats: 0.3, 
+        proteins: 0.8, 
+        fiber: 2.9,
+        calories: 74,
+        detailedInfo: DetailedNutritionInfo(
+          saturatedFat: 0.1,
+          monounsaturatedFat: 0.1,
+          polyunsaturatedFat: 0.1,
+          sugar: 16.3,
+          starch: 0.0,
+          water: 79.1,
+          vitaminA: 7.0,
+          vitaminC: 2.0,
+          vitaminK: 4.7,
+          vitaminE: 0.11,
+          folate: 6.0,
+          potassium: 232.0,
+          calcium: 35.0,
+          magnesium: 17.0,
+          phosphorus: 14.0,
+          iron: 0.37,
+        )
+      )),
     ProduceItem(AppLocalizations.of(context)!.lingonberries, 'assets/produce/lingonberry.jpeg', {
       'sweden': [8, 9, 10],
       'andalucia': [] 
@@ -705,6 +1062,7 @@ class ProduceListPageState extends State<ProduceListPage> with TickerProviderSta
           magnesium: 9.0,
           phosphorus: 17.0,
           iron: 0.4,
+          water: 86.0,
         )
       )),
     ProduceItem(AppLocalizations.of(context)!.cloudberries, 'assets/produce/cloudberry.jpeg', {
@@ -732,6 +1090,7 @@ class ProduceListPageState extends State<ProduceListPage> with TickerProviderSta
           magnesium: 29.0,
           phosphorus: 36.0,
           iron: 0.7,
+          water: 84.0,
         )
       )),
     ProduceItem(AppLocalizations.of(context)!.rhubarb, 'assets/produce/rhubarb.jpeg', {
@@ -757,6 +1116,7 @@ class ProduceListPageState extends State<ProduceListPage> with TickerProviderSta
           magnesium: 12.0,
           phosphorus: 17.0,
           iron: 0.3,
+          water: 1.0,
         )
       )),
     ProduceItem(AppLocalizations.of(context)!.cranberries, 'assets/produce/cranberry.jpeg', {
@@ -784,6 +1144,7 @@ class ProduceListPageState extends State<ProduceListPage> with TickerProviderSta
           magnesium: 8.0,
           phosphorus: 15.0,
           iron: 0.7,
+          water: 87.0,
         )
       )),
     ProduceItem(AppLocalizations.of(context)!.blackcurrants, 'assets/produce/blackcurrant.jpeg', {
@@ -811,6 +1172,7 @@ class ProduceListPageState extends State<ProduceListPage> with TickerProviderSta
           magnesium: 24.0,
           phosphorus: 58.0,
           iron: 1.2,
+          water: 82.0,
         )
       ))
     ];
@@ -1298,10 +1660,6 @@ class ProduceListPageState extends State<ProduceListPage> with TickerProviderSta
     return _favorites.contains(itemName);
   }
 
-  NutritionInfo _getDefaultNutrition() {
-    return NutritionInfo(carbs: 12.0, fats: 0.3, proteins: 1.0, fiber: 2.5, calories: 50);
-  }
-
   void _flipCard(String itemKey) {
     if (_flipControllers[itemKey]!.value == 0) {
       _flipControllers[itemKey]!.forward();
@@ -1714,7 +2072,7 @@ class ProduceListPageState extends State<ProduceListPage> with TickerProviderSta
           ),
         ),
         Text(
-          topVitaminPercentage > 0 ? '${topVitaminPercentage.toStringAsFixed(1)}% DRI' : '0% DRI',
+          AppLocalizations.of(context)!.dri,
           style: const TextStyle(
             fontSize: 10,
             color: Color(0xFF240041),
@@ -1743,9 +2101,21 @@ class ProduceListPageState extends State<ProduceListPage> with TickerProviderSta
             _buildNutrientHeader(),
             _buildNutrientRowWithDRI(AppLocalizations.of(context)!.vitaminA, detailed.vitaminA, AppLocalizations.of(context)!.mcg, _driValues['vitaminA']!),
             _buildNutrientRowWithDRI(AppLocalizations.of(context)!.vitaminC, detailed.vitaminC, AppLocalizations.of(context)!.mg, _driValues['vitaminC']!),
-            _buildNutrientRowWithDRI(AppLocalizations.of(context)!.vitaminK, detailed.vitaminK, AppLocalizations.of(context)!.mcg, _driValues['vitaminK']!),
+            if (detailed.vitaminD != null)
+              _buildNutrientRowWithDRI(AppLocalizations.of(context)!.vitaminD, detailed.vitaminD!, AppLocalizations.of(context)!.mcg, _driValues['vitaminD'] ?? 20.0),
             _buildNutrientRowWithDRI(AppLocalizations.of(context)!.vitaminE, detailed.vitaminE, AppLocalizations.of(context)!.mg, _driValues['vitaminE']!),
+            _buildNutrientRowWithDRI(AppLocalizations.of(context)!.vitaminK, detailed.vitaminK, AppLocalizations.of(context)!.mcg, _driValues['vitaminK']!),
+            if (detailed.thiamin != null)
+              _buildNutrientRowWithDRI(AppLocalizations.of(context)!.thiamin, detailed.thiamin!, AppLocalizations.of(context)!.mg, _driValues['thiamin'] ?? 1.1),
+            if (detailed.riboflavin != null)
+              _buildNutrientRowWithDRI(AppLocalizations.of(context)!.riboflavin, detailed.riboflavin!, AppLocalizations.of(context)!.mg, _driValues['riboflavin'] ?? 1.4),
+            if (detailed.niacin != null)
+              _buildNutrientRowWithDRI(AppLocalizations.of(context)!.niacin, detailed.niacin!, AppLocalizations.of(context)!.mg, _driValues['niacin'] ?? 16.0),
+            if (detailed.vitaminB6 != null)
+              _buildNutrientRowWithDRI(AppLocalizations.of(context)!.vitaminB6, detailed.vitaminB6!, AppLocalizations.of(context)!.mg, _driValues['vitaminB6'] ?? 1.4),
             _buildNutrientRowWithDRI(AppLocalizations.of(context)!.folate, detailed.folate, AppLocalizations.of(context)!.mcg, _driValues['folate']!),
+            if (detailed.vitaminB12 != null)
+              _buildNutrientRowWithDRI(AppLocalizations.of(context)!.vitaminB12, detailed.vitaminB12!, AppLocalizations.of(context)!.mcg, _driValues['vitaminB12'] ?? 2.4),
             
             const SizedBox(height: 20),
             Text(
@@ -1763,6 +2133,14 @@ class ProduceListPageState extends State<ProduceListPage> with TickerProviderSta
             _buildNutrientRowWithDRI(AppLocalizations.of(context)!.magnesium, detailed.magnesium, AppLocalizations.of(context)!.mg, _driValues['magnesium']!),
             _buildNutrientRowWithDRI(AppLocalizations.of(context)!.phosphorus, detailed.phosphorus, AppLocalizations.of(context)!.mg, _driValues['phosphorus']!),
             _buildNutrientRowWithDRI(AppLocalizations.of(context)!.iron, detailed.iron, AppLocalizations.of(context)!.mg, _driValues['iron']!),
+            if (detailed.zinc != null)
+              _buildNutrientRowWithDRI(AppLocalizations.of(context)!.zinc, detailed.zinc!, AppLocalizations.of(context)!.mg, _driValues['zinc'] ?? 10.0),
+            if (detailed.sodium != null)
+              _buildNutrientRowWithDRI(AppLocalizations.of(context)!.sodium, detailed.sodium!, AppLocalizations.of(context)!.mg, _driValues['sodium'] ?? 2300.0),
+            if (detailed.selenium != null)
+              _buildNutrientRowWithDRI(AppLocalizations.of(context)!.selenium, detailed.selenium!, AppLocalizations.of(context)!.mcg, _driValues['selenium'] ?? 55.0),
+            if (detailed.iodine != null)
+              _buildNutrientRowWithDRI(AppLocalizations.of(context)!.iodine, detailed.iodine!, AppLocalizations.of(context)!.mcg, _driValues['iodine'] ?? 150.0),
             
             const SizedBox(height: 20),
             Text(
@@ -1784,6 +2162,18 @@ class ProduceListPageState extends State<ProduceListPage> with TickerProviderSta
               _buildCarbsSubRow('Starch', detailed.starch!, 'g'),
             _buildMacroNutrientRow('Fats', item.nutritionInfo.fats, 'g'),
             _buildMacroNutrientRow('Proteins', item.nutritionInfo.proteins, 'g'),
+            
+            const SizedBox(height: 20),
+            Text(
+              AppLocalizations.of(context)!.water,
+              style: const TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+                color: Color(0xFF240041),
+              ),
+            ),
+            const SizedBox(height: 10),
+            _buildWaterRow(AppLocalizations.of(context)!.amount, detailed.water, 'g'),
             
         ],
       ),
@@ -1974,6 +2364,43 @@ class ProduceListPageState extends State<ProduceListPage> with TickerProviderSta
                 color: percentage >= 10 ? const Color(0xFF74ce9e) : const Color(0xFF666666),
               ),
             ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildWaterRow(String name, double value, String unit) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 4.0),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Expanded(
+            flex: 2,
+            child: Text(
+              name,
+              style: const TextStyle(
+                fontSize: 14,
+                color: Color(0xFF240041),
+              ),
+            ),
+          ),
+          Expanded(
+            flex: 2,
+            child: Text(
+              '${value.toStringAsFixed(value >= 1 ? 1 : 2)}$unit',
+              textAlign: TextAlign.right,
+              style: const TextStyle(
+                fontSize: 14,
+                fontWeight: FontWeight.bold,
+                color: Color(0xFF240041),
+              ),
+            ),
+          ),
+          const Expanded(
+            flex: 1,
+            child: SizedBox(),
           ),
         ],
       ),
