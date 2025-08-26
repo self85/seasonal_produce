@@ -1307,6 +1307,11 @@ class ProduceListPageState extends State<ProduceListPage> with TickerProviderSta
       _flipControllers[itemKey]!.forward();
     } else {
       _flipControllers[itemKey]!.reverse();
+      // Reset detailed nutrition state when flipping back to front
+      setState(() {
+        final itemName = itemKey.split('_')[0]; // Extract item name from key
+        _showDetailedNutrition[itemName] = false;
+      });
     }
   }
 
