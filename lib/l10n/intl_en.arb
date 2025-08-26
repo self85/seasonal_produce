@@ -73,5 +73,18 @@
   "g": " g",
   "amount": "Amount",
   "nutrient": "Nutrient",
-  "dri": "DRI"
+  "dri": "DRI",
+  "keyNutrient": "Rich in",
+  "water": "Water",
+  "betaCarotene": "Beta-Carotene",
+  "vitaminD": "Vitamin D",
+  "vitaminB6": "Vitamin B6",
+  "vitaminB12": "Vitamin B12",
+  "thiamin": "Thiamin (B1)",
+  "riboflavin": "Riboflavin (B2)",
+  "niacin": "Niacin (B3)",
+  "zinc": "Zinc",
+  "sodium": "Sodium",
+  "selenium": "Selenium",
+  "iodine": "Iodine"
 }

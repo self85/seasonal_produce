@@ -73,5 +73,18 @@
   "g": " g",
   "amount": "Mängd",
   "nutrient": "Näringsämne",
-  "dri": "RDI"
+  "dri": "RDI",
+  "keyNutrient": "Rik på",
+  "water": "Vatten",
+  "betaCarotene": "Beta-Karoten",
+  "vitaminD": "Vitamin D",
+  "vitaminB6": "Vitamin B6",
+  "vitaminB12": "Vitamin B12",
+  "thiamin": "Tiamin (B1)",
+  "riboflavin": "Riboflavin (B2)",
+  "niacin": "Niacin (B3)",
+  "zinc": "Zink",
+  "sodium": "Natrium",
+  "selenium": "Selen",
+  "iodine": "Jod"
 }
