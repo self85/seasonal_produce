@@ -4,6 +4,8 @@ class DetailedNutritionInfo {
   final double saturatedFat; // grams per 100g
   final double monounsaturatedFat; // grams per 100g
   final double polyunsaturatedFat; // grams per 100g
+  final double? sugar; // grams per 100g
+  final double? starch; // grams per 100g
   final double vitaminA; // mcg per 100g
   final double vitaminC; // mg per 100g
   final double vitaminK; // mcg per 100g
@@ -19,6 +21,8 @@ class DetailedNutritionInfo {
     required this.saturatedFat,
     required this.monounsaturatedFat,
     required this.polyunsaturatedFat,
+    this.sugar,
+    this.starch,
     required this.vitaminA,
     required this.vitaminC,
     required this.vitaminK,
