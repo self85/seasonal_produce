@@ -10,7 +10,6 @@ class DetailedNutritionInfo {
   
   // Vitamins
   final double vitaminA; // RE per 100g
-  final double? betaCarotene; // mcg per 100g
   final double vitaminC; // mg per 100g
   final double vitaminK; // mcg per 100g
   final double vitaminE; // mg per 100g
@@ -43,7 +42,6 @@ class DetailedNutritionInfo {
     
     // Vitamins
     required this.vitaminA,
-    this.betaCarotene,
     required this.vitaminC,
     required this.vitaminK,
     required this.vitaminE,
