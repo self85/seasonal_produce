@@ -36,6 +36,7 @@ class ProduceListPageState extends State<ProduceListPage> with TickerProviderSta
   String? _selectedLocation = "sweden";
   String? _selectedLanguage = "english";
   late List<ProduceItem> items;
+  List<ProduceItem> _filteredItems = [];
   bool _isExpanded = false;
   bool _isSortMenuExpanded = false;
   bool _isViewMenuExpanded = false;
@@ -45,6 +46,10 @@ class ProduceListPageState extends State<ProduceListPage> with TickerProviderSta
   AnimationController? _animationController;
   final Map<String, AnimationController> _flipControllers = {};
   final Map<String, bool> _showDetailedNutrition = {};
+  bool _isSearchVisible = false;
+  String _searchQuery = "";
+  final TextEditingController _searchController = TextEditingController();
+  final ScrollController _scrollController = ScrollController();
 
   @override
   void initState() {
@@ -53,6 +58,7 @@ class ProduceListPageState extends State<ProduceListPage> with TickerProviderSta
       duration: const Duration(milliseconds: 200),
       vsync: this,
     );
+    _scrollController.addListener(_scrollListener);
     _loadSavedPreferences();
   }
 
@@ -75,6 +81,8 @@ class ProduceListPageState extends State<ProduceListPage> with TickerProviderSta
   @override
   void dispose() {
     _animationController?.dispose();
+    _scrollController.dispose();
+    _searchController.dispose();
     for (var controller in _flipControllers.values) {
       controller.dispose();
     }
@@ -1491,6 +1499,75 @@ class ProduceListPageState extends State<ProduceListPage> with TickerProviderSta
         )
       ))
     ];
+    _filteredItems = items;
+  }
+
+  void _scrollListener() {
+    if (_scrollController.hasClients) {
+      if (_scrollController.offset <= -50) {
+        // Pulled down more than 50 pixels
+        if (!_isSearchVisible) {
+          setState(() {
+            _isSearchVisible = true;
+          });
+        }
+      } else if (_scrollController.offset > 10) {
+        // Scrolled back up
+        if (_isSearchVisible && _searchQuery.isEmpty) {
+          setState(() {
+            _isSearchVisible = false;
+          });
+        }
+      }
+    }
+  }
+
+  void _filterItems(String query) {
+    setState(() {
+      _searchQuery = query;
+      if (query.isEmpty) {
+        _filteredItems = items;
+      } else {
+        _filteredItems = items.where((item) {
+          return item.name.toLowerCase().contains(query.toLowerCase());
+        }).toList();
+      }
+    });
+  }
+
+  Widget _buildSearchBar() {
+    return AnimatedContainer(
+      duration: const Duration(milliseconds: 300),
+      height: _isSearchVisible ? 60 : 0,
+      child: _isSearchVisible
+          ? Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: TextField(
+                controller: _searchController,
+                onChanged: _filterItems,
+                decoration: InputDecoration(
+                  hintText: 'Search produce...',
+                  prefixIcon: const Icon(Icons.search),
+                  suffixIcon: _searchQuery.isNotEmpty
+                      ? IconButton(
+                          icon: const Icon(Icons.clear),
+                          onPressed: () {
+                            _searchController.clear();
+                            _filterItems('');
+                          },
+                        )
+                      : null,
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(25),
+                  ),
+                  filled: true,
+                  fillColor: Colors.white,
+                ),
+                autofocus: true,
+              ),
+            )
+          : const SizedBox.shrink(),
+    );
   }
 
   ViewType _viewType = ViewType.card;
@@ -1500,8 +1577,8 @@ class ProduceListPageState extends State<ProduceListPage> with TickerProviderSta
     final String appTitle = AppLocalizations.of(context)!.appTitle;
     int currentMonth = DateTime.now().month;
     var itemsInSeason = _selectedLocation != null
-        ? items.where((item) => item.isInSeason(_selectedLocation!, currentMonth)).toList()
-        : items;
+        ? _filteredItems.where((item) => item.isInSeason(_selectedLocation!, currentMonth)).toList()
+        : _filteredItems;
     
     itemsInSeason = _sortItems(itemsInSeason);
 
@@ -1540,7 +1617,12 @@ class ProduceListPageState extends State<ProduceListPage> with TickerProviderSta
       ),
       body: Stack(
         children: [
-          _buildView(itemsInSeason),
+          Column(
+            children: [
+              _buildSearchBar(),
+              Expanded(child: _buildView(itemsInSeason)),
+            ],
+          ),
           if (_isExpanded) _buildExpandedMenu(),
           if (_isSortMenuExpanded) _buildSortingMenu(),
           if (_isViewMenuExpanded) _buildViewMenu(),
@@ -1598,6 +1680,7 @@ class ProduceListPageState extends State<ProduceListPage> with TickerProviderSta
 
   Widget _buildListView(List<ProduceItem> items) {
     return ListView.builder(
+      controller: _scrollController,
       itemCount: items.length,
       itemBuilder: (context, index) {
         return ListTile(
@@ -1633,6 +1716,7 @@ class ProduceListPageState extends State<ProduceListPage> with TickerProviderSta
     return Padding(
       padding: EdgeInsets.all(padding),
       child: GridView.builder(
+        controller: _scrollController,
         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
           crossAxisCount: crossAxisCount,
           mainAxisSpacing: padding,
@@ -1706,6 +1790,7 @@ class ProduceListPageState extends State<ProduceListPage> with TickerProviderSta
 
   Widget _buildCardView(List<ProduceItem> items) {
     return ListView.builder(
+      controller: _scrollController,
       itemCount: items.length,
       itemBuilder: (context, index) {
         final item = items[index];
@@ -1793,7 +1878,7 @@ class ProduceListPageState extends State<ProduceListPage> with TickerProviderSta
             },
             backgroundColor: const Color(0xFF3B0D3A),
             child: const Icon(
-              Icons.language,
+              Icons.flag_sharp,
               color: Colors.white,
             ),
           ),
