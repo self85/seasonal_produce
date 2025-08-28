@@ -1,4 +1,4 @@
-package com.example.seasonal_produce
+package com.rambehr.seasonalproduce
 
 import io.flutter.embedding.android.FlutterActivity
 

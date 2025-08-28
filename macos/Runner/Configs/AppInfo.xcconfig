@@ -8,7 +8,7 @@
 PRODUCT_NAME = seasonal_produce
 
 // The application's bundle identifier
-PRODUCT_BUNDLE_IDENTIFIER = com.example.seasonalProduce
+PRODUCT_BUNDLE_IDENTIFIER = com.rambehr.seasonalProduce
 
 // The copyright displayed in application information
-PRODUCT_COPYRIGHT = Copyright © 2025 com.example. All rights reserved.
+PRODUCT_COPYRIGHT = Copyright © 2025 com.rambehr. All rights reserved.
